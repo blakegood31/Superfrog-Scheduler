@@ -1,0 +1,9 @@
+#content{
+    display: flex;
+}
+
+#sidebar{
+    background-color: rgb(94, 13, 160);
+    width: 15vw;
+}
+
