@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superfrog Report Page</title>
+
+    <style>
+        .adminLogin {
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            background-image: url('https://steve-lovelace.com/wordpress/wp-content/uploads/2015/01/tcu-campus-05.jpg');
+            background-position: center;
+            background-size: cover;
+        }
+        
+        .tcuLogo {
+            display: block;
+            width: 200px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-weight: normal;
+            text-align: center;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        #id_input {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid rgb(220, 220, 220);
+            border-radius: 5px;
+        }
+
+        #id_input:focus{
+            outline:2px solid #9079ab;
+            border-color:#9079ab;
+        }
+        
+        .reportPage {
+            position: relative;
+            width: 70vw;
+            height: 70vh;
+            margin: 0 auto;
+            padding: 50px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px #ccc;
+        }
+        
+        .loginButton{
+            color: #ffff;
+            display: block;
+            width: 50%;
+            margin:  0 auto;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
+            background-color: #531e7e;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        
+        .loginButton:hover {
+            background-color: #9079ab;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+        }
+
+        #reportTextArea{
+            width: 100%;
+            height: 200px;
+            border: 1px solid rgb(220, 220, 220);
+            border-radius: 5px;
+            resize: none;
+        }
+        #reportTextArea:focus{
+            /*border:2px solid #531e7e;*/
+            outline:2px solid #9079ab;
+            border-color:#9079ab;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="adminLogin">
+        <div class="reportPage">
+            <h2>Superfrog Report</h2>
+            <div>
+                <form>
+                    <label>Superfrog ID:</label>
+                    <input type="text" id="id_input"/>
+                    <label>Report Summary:</label>
+                    <textarea id="reportTextArea" maxlength="200"></textarea>
+                    <label>Rating</label>
+                    <input type="number" max="5" step=".5"/><span> / 5</span>
+                </br>
+                    <button>Submit</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
