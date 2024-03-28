@@ -1,0 +1,65 @@
+.adminLogin {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    background-image: url('https://steve-lovelace.com/wordpress/wp-content/uploads/2015/01/tcu-campus-05.jpg');
+    background-position: center;
+    background-size: cover;
+}
+
+.tcuLogo {
+    background-image: url('https://upload.wikimedia.org/wikipedia/en/thumb/7/72/Texas_Christian_University_seal.svg/1200px-Texas_Christian_University_seal.svg.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 200px;
+    height: 200px;
+    /* Adjust the height as needed */
+    margin: 0 auto;
+}
+
+h2 {
+    font-weight: normal;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid rgb(220, 220, 220);
+    border-radius: 5px;
+}
+
+.loginForm {
+    position: relative;
+    width: 350px;
+    margin: 0 auto;
+    padding: 50px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px #ccc;
+}
+
+.loginButton {
+    color: #ffff;
+    display: block;
+    width: 50%;
+    margin: 0 auto;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    background-color: #531e7e;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.loginButton:hover {
+    background-color: #9079ab;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
