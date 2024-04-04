@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
@@ -13,7 +13,7 @@ public class Student {
     @Column(name = "performance")
     private float performance_rating;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 

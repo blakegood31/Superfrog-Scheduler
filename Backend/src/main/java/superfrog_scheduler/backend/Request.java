@@ -5,13 +5,13 @@ import jakarta.persistence.*;
 @Entity
 @Table(name= "request")
 public class Request {
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private Long id;
 
     @Column(name = "address")
     private String address;
