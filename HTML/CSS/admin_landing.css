@@ -1,0 +1,61 @@
+/* admin_landing.css */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('https://library.sportingnews.com/styles/crop_style_16_9_desktop/s3/2022-12/GettyImages-1420831465.jpg.png?itok=c7qZKheg');
+    /* Background image URL */
+    background-size: cover;
+    /* Cover the entire viewport */
+    background-position: center;
+    /* Center the background image */
+    color: rgb(94, 13, 160);
+    /* Text color */
+}
+
+.container {
+    border-radius: 15px;
+    background-color: rgb(94, 13, 160);
+    width: 70%;
+    /* Adjust the width as needed */
+    padding-top: 30%;
+    /* Adjust the height (aspect ratio) as needed */
+    text-align: center;
+    position: relative;
+    /* Needed for absolute positioning of children */
+}
+
+
+.button-box {
+    position: relative;
+    /* Position the button box relative to the container */
+    top: 80%;
+    /* Position the button box vertically in the middle of the container */
+    left: 50%;
+    /* Position the button box horizontally in the middle of the container */
+    transform: translate(-50%, -50%);
+    /* Center the button box both horizontally and vertically */
+}
+
+
+.button {
+    padding: 20px 40px;
+    margin: 20px;
+    background-color: #ffffff;
+    /* Button background color */
+    color: rgb(0, 0, 0);
+    /* Button text color */
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #9079ab;
+    /* Button background color on hover */
+}
