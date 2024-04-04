@@ -1,35 +1,43 @@
 package superfrog_scheduler.backend;
 
+import jakarta.persistence.*;
+
 @Entity
+@Table(name= "request")
 public class Request {
+    public int getId() {
+        return id;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column(name = "address")
     private String address;
+
+    @Column(name = "description")
     private String description;
     //private Date date
+
+    @Column(name = "event")
     private String event;
+
+    @Column(name = "status")
     private String status;
+
+    @Column(name = "sid")
     private int sup_id;
+
+    @Column(name = "cid")
     private int cust_id;
+
+    @Column(name = "info")
     private String info;
+
+    @Column(name = "other_orgs")
     private String other_orgs;
 
-    public Request(String address, String description, String event, String status, int sup_id, int cust_id, String info, String other_orgs) {
-        this.address = address;
-        this.description = description;
-        this.event = event;
-        this.status = status;
-        this.sup_id = sup_id;
-        this.cust_id = cust_id;
-        this.info = info;
-        this.other_orgs = other_orgs;
-    }
-
-    public int getId() {
-        return id;
-    }
 
     public String getAddress() {
         return address;

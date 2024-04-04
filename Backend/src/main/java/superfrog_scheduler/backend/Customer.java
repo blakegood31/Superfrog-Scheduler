@@ -1,20 +1,30 @@
 package superfrog_scheduler.backend;
 
+/*import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.*;*/
+
+import jakarta.persistence.*;
+
+
 @Entity
+@Table(name= "customer")
 public class Customer{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "phone")
     private int phone;
 
-    public Customer(String name, String email, int phone) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-    }
 
     public int getId() {
         return id;

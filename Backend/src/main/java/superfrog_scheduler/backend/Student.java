@@ -1,18 +1,17 @@
 package superfrog_scheduler.backend;
 
+import jakarta.persistence.*;
 @Entity
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column(name = "name")
     private String name;
-    private float performance_rating;
 
-    public Student(String name, float performance_rating) {
-        this.name = name;
-        this.performance_rating = performance_rating;
-    }
+    @Column(name = "performance")
+    private float performance_rating;
 
     public int getId() {
         return id;
