@@ -1,4 +1,4 @@
-package superfrog_scheduler.backend;
+package superfrog_scheduler.backend.customer;
 
 /*import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

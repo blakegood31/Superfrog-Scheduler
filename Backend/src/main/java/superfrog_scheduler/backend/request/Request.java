@@ -1,17 +1,13 @@
-package superfrog_scheduler.backend;
+package superfrog_scheduler.backend.request;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name= "request")
 public class Request {
-    public Long getId() {
-        return id;
-    }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
 
     @Column(name = "address")
     private String address;
@@ -38,6 +34,13 @@ public class Request {
     @Column(name = "other_orgs")
     private String other_orgs;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id){
+        this.id = id;
+    }
 
     public String getAddress() {
         return address;

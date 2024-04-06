@@ -1,15 +1,13 @@
-package superfrog_scheduler.backend;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+package superfrog_scheduler.backend.student;
 import org.springframework.web.bind.annotation.*;
-import superfrog_scheduler.backend.converter.StudentDtoToStudentConverter;
-import superfrog_scheduler.backend.converter.StudentToStudentDtoConverter;
+import superfrog_scheduler.backend.student.converter.StudentDtoToStudentConverter;
+import superfrog_scheduler.backend.student.converter.StudentToStudentDtoConverter;
+import superfrog_scheduler.backend.student.dto.StudentDto;
 import superfrog_scheduler.backend.system.Result;
 import superfrog_scheduler.backend.system.StatusCode;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 @RestController
 public class StudentController {
@@ -31,4 +29,20 @@ public class StudentController {
                 .collect(Collectors.toList());
         return new Result(true, StatusCode.SUCCESS, "Find all success", studentDtos);
     }
+
+    @GetMapping("/students/{studentid}")
+    public Result findStudentById(@PathVariable String studentid){
+        Student foundStudent = this.studentService.findById(studentid);
+        return new Result(true, StatusCode.SUCCESS, "Find One Success");
+    }
+
+    @PostMapping("/students")
+    public Result addArtifact(@RequestBody StudentDto studentDto){
+        // Convert artifactDto to artifact
+        Student newStudent = this.studentDtoToStudentConverter.convert(studentDto);
+        Student savedStudent = this.studentService.save(newStudent);
+        StudentDto savedStudentDto = this.studentToStudentDtoConverter.convert(savedStudent);
+        return new Result(true, StatusCode.SUCCESS, "Add Success", savedStudentDto);
+    }
+
 }

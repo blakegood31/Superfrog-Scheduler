@@ -1,14 +1,15 @@
-package superfrog_scheduler.backend;
+package superfrog_scheduler.backend.student;
 
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 
 @Entity
+@Table(name = "student")
 public class Student implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
 
     @Column(name = "name")
     private String name;
@@ -19,11 +20,11 @@ public class Student implements Serializable {
     public Student() {
 
     }
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

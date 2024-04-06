@@ -1,7 +1,7 @@
-package superfrog_scheduler.backend.converter;
+package superfrog_scheduler.backend.student.converter;
 
-import superfrog_scheduler.backend.Student;
-import superfrog_scheduler.backend.dto.StudentDto;
+import superfrog_scheduler.backend.student.Student;
+import superfrog_scheduler.backend.student.dto.StudentDto;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
