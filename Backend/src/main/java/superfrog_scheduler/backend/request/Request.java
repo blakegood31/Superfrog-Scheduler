@@ -23,10 +23,10 @@ public class Request {
     private String status;
 
     @Column(name = "sid")
-    private int sup_id;
+    private String sup_id;
 
     @Column(name = "cid")
-    private int cust_id;
+    private String cust_id;
 
     @Column(name = "info")
     private String info;
@@ -38,9 +38,7 @@ public class Request {
         return id;
     }
 
-    public void setId(String id){
-        this.id = id;
-    }
+    public void setId(String id){this.id = id;}
 
     public String getAddress() {
         return address;
@@ -74,19 +72,19 @@ public class Request {
         this.status = status;
     }
 
-    public int getSup_id() {
+    public String getSup_id() {
         return sup_id;
     }
 
-    public void setSup_id(int sup_id) {
+    public void setSup_id(String sup_id) {
         this.sup_id = sup_id;
     }
 
-    public int getCust_id() {
+    public String getCust_id() {
         return cust_id;
     }
 
-    public void setCust_id(int cust_id) {
+    public void setCust_id(String cust_id) {
         this.cust_id = cust_id;
     }
 

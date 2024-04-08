@@ -1,20 +1,12 @@
 package superfrog_scheduler.backend.customer;
 
-/*import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.*;*/
-
 import jakarta.persistence.*;
-
 
 @Entity
 @Table(name= "customer")
 public class Customer{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
 
     @Column(name = "name")
     private String name;
@@ -26,9 +18,11 @@ public class Customer{
     private int phone;
 
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
+
+    public void setId(String id){this.id=id;}
 
     public String getName() {
         return name;
