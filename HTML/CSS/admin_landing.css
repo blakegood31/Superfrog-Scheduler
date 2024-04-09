@@ -29,21 +29,17 @@ body {
     /* Needed for absolute positioning of children */
 }
 
-
 .button-box {
     position: relative;
     /* Position the button box relative to the container */
-    top: 80%;
+    top: 50%;
     /* Position the button box vertically in the middle of the container */
-    left: 50%;
-    /* Position the button box horizontally in the middle of the container */
-    transform: translate(-50%, -50%);
-    /* Center the button box both horizontally and vertically */
+    transform: translateY(-50%);
+    /* Center the button box vertically */
 }
 
-
 .button {
-    padding: 20px 40px;
+    padding: 50px 100px;
     margin: 20px;
     background-color: #ffffff;
     /* Button background color */
@@ -53,6 +49,25 @@ body {
     border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    position: relative;
+    /* Needed for positioning of the icon */
+}
+
+.button i.material-icons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    /* Adjust icon size */
+}
+
+.button span {
+    position: absolute;
+    bottom: 5px;
+    /* Adjust vertical position of text */
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .button:hover {
