@@ -17,12 +17,14 @@ public class RequestController {
     private final RequestToRequestDtoConverter requestToRequestDtoConverter;
     private final RequestDtoToRequestConverter requestDtoToRequestConverter;
 
+    //Constructor
     public RequestController(RequestService requestService, RequestToRequestDtoConverter requestToRequestDtoConverter, RequestDtoToRequestConverter requestDtoToRequestConverter){
         this.requestService = requestService;
         this.requestToRequestDtoConverter = requestToRequestDtoConverter;
         this.requestDtoToRequestConverter = requestDtoToRequestConverter;
     }
 
+    //Signature Handler methods
     @GetMapping("/requests")
     public Result findAllRequests(){
         List<Request> requestDtos = this.requestService.findAll();
@@ -31,4 +33,10 @@ public class RequestController {
                 .collect(Collectors.toList());
         return new Result(true, StatusCode.SUCCESS, "Find all success", requestDtos);
     }
+
+    @GetMapping("/requests/{id}") // Use case 7
+    public Result findRequestById(@PathVariable("id") String id) {
+        return null;
+    }
+
 }
