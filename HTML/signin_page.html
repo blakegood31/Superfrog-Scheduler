@@ -9,19 +9,39 @@
 </head>
 
 <body>
-    <div class="adminLogin">
+    <div id="app" class="adminLogin"> <!-- Added id="app" -->
         <div class="loginForm">
             <div class="tcuLogo"></div> <!-- Added TCU logo div -->
             <h2>Superfrog Director</h2>
-            <form>
+            <form @submit.prevent="login"> <!-- Added submit.prevent to prevent default form submission -->
                 <label>Username:</label>
-                <input type="text" id="username" />
+                <input type="text" id="username" v-model="username" /> <!-- Bound input to username data property -->
                 <label>Password:</label>
-                <input type="password" id="password" />
-                <div><button type="button" class="loginButton">Login</button></div>
+                <input type="password" id="password" v-model="password" />
+                <!-- Bound input to password data property -->
+                <div><button type="submit" class="loginButton">Login</button></div>
+                <!-- Changed type to submit and added @submit event -->
             </form>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script> <!-- Added Vue.js library -->
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                username: '', // Data property for username
+                password: ''  // Data property for password
+            },
+            methods: {
+                login() {
+                    // Redirect to a specific page after successful login
+                    window.location.href = 'admin_landing.html';
+                }
+            }
+        });
+    </script>
 </body>
 
 </html>
