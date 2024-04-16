@@ -39,27 +39,54 @@
             <h4>Notes:</h4>
             <p>{{request.specialInstructions}}</p>
             <h2>Superfrog Student</h2>
-            <p>{{request.superfrog.name}}</p>
+            <p>{{request.superfrog.name}} 
+                <select v-model="selectedStudent">
+                    <option v-for="(item, index) in students" :value="item.id">{{item.name}}</option>
+                </select>
+            </p>
         </div>
         <button @click="backToAll">Back to All Requests</button>
+        
+        <!-- Button to test if value of the selected student is saved correctly--> 
+        <button @click="showStudent">Show Student</button>
     </div>
 
     <script>
         new Vue({
             el: '#app',
             data: {
-                request: {}
+                request: {},
+                students: [],
+                selectedStudent: ''
             },
             created(){
                 // Initialize request object to the one selected on the "view all requests" page
                 const selectedObject = JSON.parse(localStorage.getItem('requestData'));
                 console.log(selectedObject);
                 this.request = selectedObject;
+                fetch('http://127.0.0.1:8080/students')
+                    .then(response => {
+                        if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                        this.students = data.data;
+                        console.log(this.students);
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
             },
             methods: {
                 backToAll() {
                     // Redirect to page showing all requests
                     window.location.href = 'view_all_requests.html';
+                },
+                showStudent() {
+                    console.log(this.selectedStudent);
                 }
             }
         });
