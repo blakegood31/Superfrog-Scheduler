@@ -1,0 +1,20 @@
+table {
+    border-collapse: collapse; /* Merge cell borders */
+    width: 100%; /* Optional: set table width */
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  th, td {
+    border: 1px solid black; /* Add border to table cells */
+    padding: 8px; /* Optional: add padding */
+  }
+  
+  th {
+    background-color: #f2f2f2; /* Optional: add background color to headers */
+  }
+
+  tr:hover {
+    background-color: #c39fed; /* Change background color when row is focused */
+    outline: none;
+  }

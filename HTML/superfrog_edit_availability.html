@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta 
+            name="superfrog edit availability page"
+            content="this page allows superfrog students to update their availability"/>
+        <meta name="keywords"/>
+        <title>Update Availability</title>
+        <link rel="stylesheet" href="CSS/availability_style.css">
+    </head>
+<body>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Availability</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+
+
+<body>
+    <div id="app">
+        <div>
+            <label for="timeInput">Choose a time:</label>
+            <input type="datetime-local" id="timeInput" name="timeInput" v-model="selectedTime">
+        </div>
+        <div>
+            <table v-cloak>
+                <tr>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                <tr tabindex="0" v-for="(item, index) in availability">
+                    <td>{{item.date}}</td>
+                    <td>{{item.startTime}}</td>
+                    <td>{{item.endTime}}</td>
+                    <td>{{item.is_available}}</td>
+                    <td>
+                        <button>Update</button>
+                        <button>Remove</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Go back to landing -->
+        <button @click="showAvailability">View Availability</button>
+
+        <!-- Move forward to page 2 -->
+        <button @click="submitNewAvailability">Submit</button>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                selectedTime: '', // Store selected date
+                availability: []
+            },
+            methods: {
+                showAvailability() {
+                    fetch('http://127.0.0.1:8080/availability')
+                        .then(response => {
+                            if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data);
+                            this.availability = data.data;
+                            this.availability.forEach(item => {
+                                // Create Date objects from startTime and endTime strings
+                                item.startTime = new Date(item.startTime);
+                                item.endTime = new Date(item.endTime);
+                                // Formate date and times to be used in table 
+                                const startDate = `${('0' + (item.startTime.getMonth() + 1)).slice(-2)}-${('0' + item.startTime.getDate()).slice(-2)}-${item.startTime.getFullYear() % 100}`;
+                                const startTime = `${('0' + item.startTime.getHours()).slice(-2)}:${('0' + item.startTime.getMinutes()).slice(-2)}`;
+                                const endTime = `${('0' + item.endTime.getHours()).slice(-2)}:${('0' + item.endTime.getMinutes()).slice(-2)}`;
+                                
+                                item.date = startDate;
+                                item.startTime = startTime;
+                                item.endTime = endTime;
+                            });
+                            console.log(this.availability);
+                        })
+                        .catch(error => {
+                            console.error('There was a problem with the fetch operation:', error);
+                        });
+                },
+                submitNewAvailability() {
+                    // Redirect to page 2 if a date is selected
+                    console.log(this.selectedTime + ":00")
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
