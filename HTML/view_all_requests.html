@@ -42,61 +42,56 @@
                     <td>{{item.address}}</td>
                     <td>{{item.status}}</td>
                     <td>
-                        <button>Approve</button>
-                        <button>Deny</button>
+                        <button @click="viewFullRequest(item.id)">View Full Request</button>
                     </td>
                 </tr>
             </table>
         </div>
-
-        <!-- Go back to landing -->
-        <button @click="showAvailability">View Requests</button>
-
-        <!-- Move forward to page 2 -->
-        <button @click="submitNewAvailability">Submit</button>
     </div>
 
     <script>
         new Vue({
             el: '#app',
             data: {
-                selectedTime: '', // Store selected date
                 requests: []
             },
-            methods: {
-                showAvailability() {
-                    fetch('http://127.0.0.1:8080/requests')
-                        .then(response => {
-                            if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            console.log(data);
-                            this.requests = data.data;
-                            this.requests.forEach(item => {
-                                // Create Date objects from startTime and endTime strings
-                                item.startTime = new Date(item.startTime);
-                                item.endTime = new Date(item.endTime);
-                                // Formate date and times to be used in table 
-                                const startDate = `${('0' + (item.startTime.getMonth() + 1)).slice(-2)}-${('0' + item.startTime.getDate()).slice(-2)}-${item.startTime.getFullYear() % 100}`;
-                                const startTime = `${('0' + item.startTime.getHours()).slice(-2)}:${('0' + item.startTime.getMinutes()).slice(-2)}`;
-                                const endTime = `${('0' + item.endTime.getHours()).slice(-2)}:${('0' + item.endTime.getMinutes()).slice(-2)}`;
-                                
-                                item.date = startDate;
-                                item.startTime = startTime;
-                                item.endTime = endTime;
-                            });
-                            console.log(this.requests);
-                        })
-                        .catch(error => {
-                            console.error('There was a problem with the fetch operation:', error);
+            created(){
+                fetch('http://127.0.0.1:8080/requests')
+                    .then(response => {
+                        if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                        this.requests = data.data;
+                        this.requests.forEach(item => {
+                            // Create Date objects from startTime and endTime strings
+                            item.startTime = new Date(item.startTime);
+                            item.endTime = new Date(item.endTime);
+                            // Format date and times to be used in table 
+                            const startDate = `${('0' + (item.startTime.getMonth() + 1)).slice(-2)}-${('0' + item.startTime.getDate()).slice(-2)}-${item.startTime.getFullYear() % 100}`;
+                            const startTime = `${('0' + item.startTime.getHours()).slice(-2)}:${('0' + item.startTime.getMinutes()).slice(-2)}`;
+                            const endTime = `${('0' + item.endTime.getHours()).slice(-2)}:${('0' + item.endTime.getMinutes()).slice(-2)}`;
+                            
+                            item.date = startDate;
+                            item.startTime = startTime;
+                            item.endTime = endTime;
                         });
-                },
-                submitNewAvailability() {
-                    // Redirect to page 2 if a date is selected
-                    console.log(this.selectedTime + ":00")
+                        console.log(this.requests);
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+            },
+            methods: {
+                viewFullRequest(requestId) {
+                    // Redirect to page showing all details of the selected request
+                    const selectedRequest = this.requests.find(obj => obj.id === requestId);
+                    console.log(selectedRequest);
+                    localStorage.setItem('requestData', JSON.stringify(selectedRequest));
+                    window.location.href = 'view_full_request.html';
                 }
             }
         });
