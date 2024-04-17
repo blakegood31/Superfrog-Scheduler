@@ -1,0 +1,11 @@
+.editButton{
+    margin-left: 20px;
+}
+
+.editButton:hover{
+    border-color: blueviolet;
+}
+
+.hidden{
+    display: none;
+}

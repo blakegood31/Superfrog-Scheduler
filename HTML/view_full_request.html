@@ -8,7 +8,7 @@
             content="this page allows superfrog students to update their availability"/>
         <meta name="keywords"/>
         <title>Full Request</title>
-        <link rel="stylesheet" href="CSS/availability_style.css">
+        <link rel="stylesheet" href="CSS/full_request_style.css">
     </head>
 <body>
 <html lang="en">
@@ -24,20 +24,30 @@
 <body>
     <div id="app">
         <div v-bind="request">
-            <h2>Event</h2>
+            <!-- HTML For Event Title -->
+            <h2>Event <button class="editButton" @click="editTextValue('Event')">Edit</button></h2>
             <p>{{request.eventTitle}}</p>
-            <h2>Customer</h2>
+            <input type="text" id="editEventTextBox" class="hidden" placeholder="Enter new event title..." v-model="updatedData">
+            <button id="editEventSaveButton" class="hidden" @click="saveEventChanges()">Save Changes</button> <button id="editEventCancelButton" class="hidden" @click="editTextValue('Event')">Cancel</button>
+            <!-- HTML For Customer Info -->
+            <h2>Customer <button class="editButton" @click="editTextValue('Customer')">Edit</button></h2>
             <p>{{request.customer.name}}</p>
-            <h2>Time</h2>
+            <input type="text" id="editCustomerTextBox" class="hidden" placeholder="Enter new customer name..." v-model="updatedData">
+            <button id="editCustomerSaveButton" class="hidden" @click="saveCustomerChanges()">Save Changes</button> <button id="editCustomerCancelButton" class="hidden" @click="editTextValue('Customer')">Cancel</button>
+            <!-- HTML For Time Info -->
+            <h2>Time <button class="editButton">Edit</button></h2>
             <p>Day: {{request.date}}</p>
             <p>Start: {{request.startTime}}</p>
             <p>End: {{request.endTime}}</p>
-            <h2>Location</h2>
+            <!-- HTML For Location Info -->
+            <h2>Location <button class="editButton" @click="editTextValue('Location')">Edit</button></h2>
             <p>{{request.address}}</p>
-            <h2>Description</h2>
+            <!-- HTML For Event Description -->
+            <h2>Description <button class="editButton" @click="editTextValue('Description')">Edit</button></h2>
             <p>{{request.description}}</p>
-            <h4>Notes:</h4>
+            <h4>Notes: <button class="editButton" @click="editTextValue('SpecialInstructions')">Edit</button></h4>
             <p>{{request.specialInstructions}}</p>
+            <!-- HTML For Superfrog Student Info -->
             <h2>Superfrog Student</h2>
             <p>{{request.superfrog.name}} 
                 <select v-model="selectedStudent">
@@ -45,8 +55,8 @@
                 </select>
             </p>
         </div>
+        <!-- Button to return to "view all requests" page-->
         <button @click="backToAll">Back to All Requests</button>
-        
         <!-- Button to test if value of the selected student is saved correctly--> 
         <button @click="showStudent">Show Student</button>
     </div>
@@ -57,7 +67,9 @@
             data: {
                 request: {},
                 students: [],
-                selectedStudent: ''
+                selectedStudent: '',
+                updatedData: '',
+                url: 'http://127.0.0.1:8080/'
             },
             created(){
                 // Initialize request object to the one selected on the "view all requests" page
@@ -87,6 +99,84 @@
                 },
                 showStudent() {
                     console.log(this.selectedStudent);
+                },
+                editTextValue(sectionName) {
+                    var textBox = document.getElementById("edit" + sectionName + "TextBox");
+                    var saveButton = document.getElementById("edit" + sectionName + "SaveButton");
+                    var cancelButton = document.getElementById("edit" + sectionName + "CancelButton");
+                    textBox.classList.toggle("hidden");
+                    saveButton.classList.toggle("hidden");
+                    cancelButton.classList.toggle("hidden");
+                },
+                saveEventChanges(){
+                    this.request.eventTitle = this.updatedData;
+                    this.finalizeChanges('Event Title');
+                },
+                saveCustomerChanges(){
+                    this.request.customer.name = this.updatedData;
+                    this.finalizeChanges('Customer Name');
+                },
+                finalizeChanges(fieldName){
+                    var result = confirm("Would you like to save changes to" + fieldName + "?");
+                    if(result){
+                        this.sendRequestChanges();
+                    }
+                    else{
+                        alert("Changes discarded")
+                        return
+                    }
+                },
+                sendRequestChanges(){
+                    const updateUrl = this.url + 'requests/' + this.request.id;
+                    const updatedRequest = {
+                        id: this.request.id,
+                        address: this.request.address,
+                        description: this.request.description,
+                        startTime: this.request.unfmtdStartTime,
+                        endTime: this.request.unfmtdEndTime,
+                        eventTitle: this.request.eventTitle,
+                        status: this.request.status,
+                        superfrog: this.request.superfrog,
+                        customer: this.request.customer,
+                        specialInstructions: this.request.specialInstructions,
+                        other_orgs: this.request.other_orgs
+                    };
+
+                    const options = {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updatedRequest)
+                    };
+
+                    // Sending the PUT request
+                    fetch(updateUrl, options)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('PUT request succeeded with JSON response:', data);
+                            this.request = data.data;
+                            // Create Date objects from startTime and endTime strings
+                            this.request.unfmtdStartTime = this.request.startTime;
+                            this.request.unfmtdEndTime = this.request.endTime;
+                            this.request.startTime = new Date(this.request.startTime);
+                            this.request.endTime = new Date(this.request.endTime);
+                            // Format date and times to be used in table 
+                            const startDate = `${('0' + (this.request.startTime.getMonth() + 1)).slice(-2)}-${('0' + this.request.startTime.getDate()).slice(-2)}-${this.request.startTime.getFullYear() % 100}`;
+                            const startTime = `${('0' + this.request.startTime.getHours()).slice(-2)}:${('0' + this.request.startTime.getMinutes()).slice(-2)}`;
+                            const endTime = `${('0' + this.request.endTime.getHours()).slice(-2)}:${('0' + this.request.endTime.getMinutes()).slice(-2)}`;
+                            this.request.date = startDate;
+                            this.request.startTime = startTime;
+                            this.request.endTime = endTime;
+                        })
+                        .catch(error => {
+                            console.error('There was a problem with the PUT request:', error);
+                        });
                 }
             }
         });

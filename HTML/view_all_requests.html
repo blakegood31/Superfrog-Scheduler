@@ -68,6 +68,8 @@
                         this.requests = data.data;
                         this.requests.forEach(item => {
                             // Create Date objects from startTime and endTime strings
+                            item.unfmtdStartTime = item.startTime;
+                            item.unfmtdEndTime = item.endTime;
                             item.startTime = new Date(item.startTime);
                             item.endTime = new Date(item.endTime);
                             // Format date and times to be used in table 
@@ -78,6 +80,8 @@
                             item.date = startDate;
                             item.startTime = startTime;
                             item.endTime = endTime;
+                            console.log(item.unfmtdStartTime);
+                            console.log(item.unfmtdEndTime);
                         });
                         console.log(this.requests);
                     })
