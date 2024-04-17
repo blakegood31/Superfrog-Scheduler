@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!--TO DO: delete request_page_1.html-->
         <!-- progress bar -->
             <Progressbar />
         <!-- Date picker -->
@@ -23,19 +24,16 @@
         const selectedDate = ref('');
 
         const goToLanding = () => {
-            // Redirect to landing page
-            window.location.href = 'customer_landing.html';
+            // go to landing page
+            router.push('/custland');
         };
 
         const goToPage2 = () => {
-            // Redirect to page 2 if a date is selected
+            // go to page 2 if a date is selected
             if (selectedDate.value) {
-                window.location.href = 'RequestPage2.vue';
+                router.push('/page2');
             }
         };
     </script>
     
-    <style>
-    /* Add component-specific styles here */
-    </style>
     

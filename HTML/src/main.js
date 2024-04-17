@@ -6,6 +6,7 @@ import App from './App.vue'
 
 createApp(App)
     .use(ElementPlus)
+    .use(router)
     //register components
     .component('RequestPage1', RequestPage1)
     .component('RequestPage2', RequestPage1)
