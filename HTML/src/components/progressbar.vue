@@ -24,4 +24,3 @@ defineProps({
   margin-bottom: 15px;
   max-width: 600px;
 }
-</style>
