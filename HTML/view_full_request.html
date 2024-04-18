@@ -31,9 +31,16 @@
             <button id="editEventSaveButton" class="hidden" @click="saveEventChanges()">Save Changes</button> <button id="editEventCancelButton" class="hidden" @click="editTextValue('Event')">Cancel</button>
             <!-- HTML For Customer Info -->
             <h2>Customer <button class="editButton" @click="editTextValue('Customer')">Edit</button></h2>
-            <p>{{request.customer.name}}</p>
-            <input type="text" id="editCustomerTextBox" class="hidden" placeholder="Enter new customer name..." v-model="updatedData">
-            <button id="editCustomerSaveButton" class="hidden" @click="saveCustomerChanges()">Save Changes</button> <button id="editCustomerCancelButton" class="hidden" @click="editTextValue('Customer')">Cancel</button>
+            <p>First: {{request.customer.fname}}</p>
+            <p>Last: {{request.customer.lname}}</p>
+            <div class="hidden" id="editCustomerFields">
+                <label id="customerFnameLabel" for="editCustomerTextBox">When is your event?</label>
+                <input type="text" id="editCustomerFnameTextBox" name="id=editCustomerTextBox" :placeholder=request.customer.fname v-model="updatedData">
+                <br/>
+                <label id="customerLnameLabel" for="editCustomerTextBox">When is your event?</label>
+                <input type="text" id="editCustomerLnameTextBox" name="id=editCustomerTextBox" :placeholder=request.customer.lname v-model="updatedData">
+                <button id="editCustomerSaveButton" @click="saveCustomerChanges()">Save Changes</button> <button id="editCustomerCancelButton" @click="editTextValue('Customer')">Cancel</button>    
+            </div>
             <!-- HTML For Time Info -->
             <h2>Time <button class="editButton">Edit</button></h2>
             <p>Day: {{request.date}}</p>
@@ -101,19 +108,34 @@
                     console.log(this.selectedStudent);
                 },
                 editTextValue(sectionName) {
-                    var textBox = document.getElementById("edit" + sectionName + "TextBox");
-                    var saveButton = document.getElementById("edit" + sectionName + "SaveButton");
+                    if(sectionName === "Customer"){
+                        /* var fnameTextBox = document.getElementById("editCustomerFnameTextBox");
+                        var fnameLabel = document.getElementById("customerFnameLabel");
+                        var lnameTextBox = document.getElementById("editCustomerLnameTextBox");
+                        var lnameLabel = document.getElementById("customerLnameLabel");
+                        fnameLabel.classList.toggle("hidden");
+                        lnameLabel.classList.toggle("hidden");
+                        fnameTextBox.classList.toggle("hidden");
+                        lnameTextBox.classList.toggle("hidden"); */
+                        var customerFields = document.getElementById("editCustomerFields");
+                        customerFields.classList.toggle("hidden");
+                    }
+                    else{
+                       /*  var textBox = document.getElementById("edit" + sectionName + "TextBox"); 
+                        textBox.classList.toggle("hidden"); */
+                        return
+                    }
+                    /* var saveButton = document.getElementById("edit" + sectionName + "SaveButton");
                     var cancelButton = document.getElementById("edit" + sectionName + "CancelButton");
-                    textBox.classList.toggle("hidden");
                     saveButton.classList.toggle("hidden");
-                    cancelButton.classList.toggle("hidden");
+                    cancelButton.classList.toggle("hidden"); */
                 },
                 saveEventChanges(){
                     this.request.eventTitle = this.updatedData;
                     this.finalizeChanges('Event Title');
                 },
                 saveCustomerChanges(){
-                    this.request.customer.name = this.updatedData;
+                    this.request.customer.fname = this.updatedData;
                     this.finalizeChanges('Customer Name');
                 },
                 finalizeChanges(fieldName){
