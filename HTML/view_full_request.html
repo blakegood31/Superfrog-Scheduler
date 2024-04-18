@@ -26,20 +26,33 @@
         <div v-bind="request">
             <!-- HTML For Event Title -->
             <h2>Event <button class="editButton" @click="editTextValue('Event')">Edit</button></h2>
-            <p>{{request.eventTitle}}</p>
-            <input type="text" id="editEventTextBox" class="hidden" placeholder="Enter new event title..." v-model="updatedData">
-            <button id="editEventSaveButton" class="hidden" @click="saveEventChanges()">Save Changes</button> <button id="editEventCancelButton" class="hidden" @click="editTextValue('Event')">Cancel</button>
+            <div class="" id="showEventInfo">
+                <p>{{request.eventTitle}}</p>
+            </div>
+            <div class="hidden" id="editEventFields">
+                <input type="text" id="editEventTextBox" placeholder="Enter new event title..." v-model="updatedEventData">
+                <button id="editEventSaveButton" @click="saveEventChanges()">Save Changes</button> <button id="editEventCancelButton" @click="editTextValue('Event')">Cancel</button>
+            </div>
             <!-- HTML For Customer Info -->
             <h2>Customer <button class="editButton" @click="editTextValue('Customer')">Edit</button></h2>
-            <p>First: {{request.customer.fname}}</p>
-            <p>Last: {{request.customer.lname}}</p>
+            <div class="" id="showCustomerInfo">
+                <p>First: {{request.customer.fname}}</p>
+                <p>Last: {{request.customer.lname}}</p>
+            </div>
             <div class="hidden" id="editCustomerFields">
-                <label id="customerFnameLabel" for="editCustomerTextBox">When is your event?</label>
-                <input type="text" id="editCustomerFnameTextBox" name="id=editCustomerTextBox" :placeholder=request.customer.fname v-model="updatedData">
+                <label id="customerFnameLabel" for="editCustomerFnameTextBox">New First Name</label>
+                <input type="text" id="editCustomerFnameTextBox" v-model="customer.fname">
                 <br/>
-                <label id="customerLnameLabel" for="editCustomerTextBox">When is your event?</label>
-                <input type="text" id="editCustomerLnameTextBox" name="id=editCustomerTextBox" :placeholder=request.customer.lname v-model="updatedData">
-                <button id="editCustomerSaveButton" @click="saveCustomerChanges()">Save Changes</button> <button id="editCustomerCancelButton" @click="editTextValue('Customer')">Cancel</button>    
+                <label id="customerLnameLabel" for="editCustomerLnameTextBox">New Last Name</label>
+                <input type="text" id="editCustomerLnameTextBox" v-model="customer.lname">
+                <br/>
+                <label id="customerEmailLabel" for="editCustomerEmailTextBox">New Email</label>
+                <input type="text" id="editCustomerEmailTextBox" v-model="customer.email">   
+                <br/>
+                <label id="customerPhoneLabel" for="editCustomerPhoneTextBox">New Phone</label>
+                <input type="text" id="editCustomerPhoneTextBox" v-model="customer.phone"> 
+                <br/>
+                <button id="editCustomerSaveButton" @click="saveCustomerChanges()">Save Changes</button> <button id="editCustomerCancelButton" @click="editTextValue('Customer')">Cancel</button> 
             </div>
             <!-- HTML For Time Info -->
             <h2>Time <button class="editButton">Edit</button></h2>
@@ -48,7 +61,15 @@
             <p>End: {{request.endTime}}</p>
             <!-- HTML For Location Info -->
             <h2>Location <button class="editButton" @click="editTextValue('Location')">Edit</button></h2>
-            <p>{{request.address}}</p>
+            <div class="" id="showLocationInfo">
+                <p>{{request.address}}</p>  
+            </div>
+            <div class="hidden" id="editLocationFields">
+                <label id="eventAddressLabel" for="editEventAddressTextBox">New Location</label>
+                <input type="text" id="editEventAddressTextBox" v-model="updatedEventData">
+                <button id="editLocationSaveButton" @click="saveLocationChanges()">Save Changes</button> <button id="editLocationCancelButton" @click="editTextValue('Location')">Cancel</button> 
+            </div>
+            
             <!-- HTML For Event Description -->
             <h2>Description <button class="editButton" @click="editTextValue('Description')">Edit</button></h2>
             <p>{{request.description}}</p>
@@ -75,7 +96,9 @@
                 request: {},
                 students: [],
                 selectedStudent: '',
-                updatedData: '',
+                updatedEventData: '',
+                customer: {},
+                currentEdit: {},
                 url: 'http://127.0.0.1:8080/'
             },
             created(){
@@ -83,6 +106,7 @@
                 const selectedObject = JSON.parse(localStorage.getItem('requestData'));
                 console.log(selectedObject);
                 this.request = selectedObject;
+                this.customer = this.request.customer
                 fetch('http://127.0.0.1:8080/students')
                     .then(response => {
                         if (!response.ok) {
@@ -108,44 +132,47 @@
                     console.log(this.selectedStudent);
                 },
                 editTextValue(sectionName) {
-                    if(sectionName === "Customer"){
-                        /* var fnameTextBox = document.getElementById("editCustomerFnameTextBox");
-                        var fnameLabel = document.getElementById("customerFnameLabel");
-                        var lnameTextBox = document.getElementById("editCustomerLnameTextBox");
-                        var lnameLabel = document.getElementById("customerLnameLabel");
-                        fnameLabel.classList.toggle("hidden");
-                        lnameLabel.classList.toggle("hidden");
-                        fnameTextBox.classList.toggle("hidden");
-                        lnameTextBox.classList.toggle("hidden"); */
-                        var customerFields = document.getElementById("editCustomerFields");
-                        customerFields.classList.toggle("hidden");
+                    this.updatedEventData = '';
+                    this.customer = this.request.customer;
+                    if(Object.keys(this.currentEdit).length > 0){
+                        document.getElementById(this.currentEdit.editName).classList.toggle("hidden");
+                        document.getElementById(this.currentEdit.showName).classList.toggle("hidden");
                     }
-                    else{
-                       /*  var textBox = document.getElementById("edit" + sectionName + "TextBox"); 
-                        textBox.classList.toggle("hidden"); */
-                        return
-                    }
-                    /* var saveButton = document.getElementById("edit" + sectionName + "SaveButton");
-                    var cancelButton = document.getElementById("edit" + sectionName + "CancelButton");
-                    saveButton.classList.toggle("hidden");
-                    cancelButton.classList.toggle("hidden"); */
+                    var editName = "edit" + sectionName + "Fields";
+                    var showName = "show" + sectionName + "Info";
+                    this.currentEdit.editName = editName;
+                    this.currentEdit.showName = showName;
+                    document.getElementById(editName).classList.toggle("hidden");
+                    document.getElementById(showName).classList.toggle("hidden");
                 },
                 saveEventChanges(){
-                    this.request.eventTitle = this.updatedData;
-                    this.finalizeChanges('Event Title');
+                    if(this.finalizeChanges('Event Title')){
+                        this.request.eventTitle = this.updatedEventData;
+                        this.sendRequestChanges();
+                    }
                 },
                 saveCustomerChanges(){
-                    this.request.customer.fname = this.updatedData;
-                    this.finalizeChanges('Customer Name');
+                    if(this.finalizeChanges('Customer Data')){
+                        this.request.customer = this.customer;
+                        console.log(this.request);
+                        this.sendRequestChanges();
+                    }
+                },
+                saveLocationChanges(){
+                    if(this.finalizeChanges('Location')){
+                        this.request.location = this.updatedEventData;
+                        console.log(this.request);
+                        this.sendRequestChanges();
+                    }
                 },
                 finalizeChanges(fieldName){
                     var result = confirm("Would you like to save changes to" + fieldName + "?");
                     if(result){
-                        this.sendRequestChanges();
+                        return true
                     }
                     else{
                         alert("Changes discarded")
-                        return
+                        return false
                     }
                 },
                 sendRequestChanges(){
@@ -199,6 +226,9 @@
                         .catch(error => {
                             console.error('There was a problem with the PUT request:', error);
                         });
+
+                    this.updatedEventData = '';
+                    this.customer = this.request.customer;
                 }
             }
         });
