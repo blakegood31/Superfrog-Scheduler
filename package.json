@@ -1,16 +1,10 @@
 {
-
   "dependencies": {
-<<<<<<< HEAD
     "axios": "^1.6.8",
-    "vue-router": "^4.3.1"
-=======
-    "axios": "^1.6.8"
-
+    "vue-router": "^4.0.13"
+  },
   "devDependencies": {
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0"
-
->>>>>>> 058895160e572443f10246b47ea547719f222226
   }
 }
