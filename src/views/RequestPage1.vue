@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!--TO DO: delete request_page_1.html-->
+        <!--TO DO: date & time pickers -->
         <!-- progress bar -->
             <Progressbar />
         <!-- Date picker -->
