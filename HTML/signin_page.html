@@ -14,14 +14,17 @@
             <div class="tcuLogo"></div> <!-- Added TCU logo div -->
             <h2>Superfrog Director</h2>
             <form @submit.prevent="login"> <!-- Added submit.prevent to prevent default form submission -->
-                <label>Username:</label>
-                <input type="text" id="username" v-model="username" /> <!-- Bound input to username data property -->
-                <label>Password:</label>
-                <input type="password" id="password" v-model="password" />
+                <label for="username">Username:</label>
+                <input type="text" id="username" v-model="username" required/> <!-- Bound input to username data property -->
+                <label for="password">Password:</label>
+                <input type="password" id="password" v-model="password" required/>
                 <!-- Bound input to password data property -->
                 <div><button type="submit" class="loginButton">Login</button></div>
                 <!-- Changed type to submit and added @submit event -->
             </form>
+            <div v-if="loginFailed" class="loginError">
+                <p>Login unsuccessful. Please try again.</p>
+            </div>
         </div>
     </div>
 
@@ -31,13 +34,46 @@
         new Vue({
             el: '#app',
             data: {
-                username: '', // Data property for username
-                password: ''  // Data property for password
+                username: '', 
+                password: '',
+                loginFailed: false 
             },
             methods: {
                 login() {
                     // Redirect to a specific page after successful login
-                    window.location.href = 'admin_landing.html';
+                    //window.location.href = 'request_page_1.html';
+                    fetch('http://localhost:8080/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Basic ' + btoa(this.username + ':' + this.password)
+                        },
+                        body: JSON.stringify({
+                            username: this.username,
+                            password: this.password,
+                        }),
+                    }).then(response => {
+                        if(response.ok){
+                            console.log("Successful Login");
+                            console.log(response);
+                            this.loginFailed = false;
+                            return response.json();
+                        }
+                        else{
+                            console.log("Login Unsuccessful");
+                            this.username = '';
+                            this.password = '';
+                            this.loginFailed = true;
+                            console.log(response);
+                            throw new Error("Login failed")
+                        }
+                    }).then(data => {
+                        const token = data.data.token;
+                        localStorage.setItem('userToken', token);
+                        window.location.href = 'admin_landing.html';
+                    }).catch(error => {
+                        console.error('Error: ', error);
+                    });
                 }
             }
         });
