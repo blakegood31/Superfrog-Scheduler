@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import './style.css'
+import '../dist/style.css'
 import App from './App.vue'
 
 
@@ -13,6 +13,4 @@ createApp(App)
     .component('RequestPage4', RequestPage1)
     .component('RequestPage5', RequestPage1)
     .mount('#app')
-
-createApp(App).mount('#app')
 

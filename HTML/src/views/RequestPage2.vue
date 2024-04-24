@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!--TO DO: delete request_page_2.html-->
+        <!--TO DO: add specific time info from input-->
         <!-- progress bar -->
             <Progressbar />
         
