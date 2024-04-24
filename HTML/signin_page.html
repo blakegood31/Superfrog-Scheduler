@@ -69,9 +69,11 @@
                             throw new Error("Login failed")
                         }
                     }).then(data => {
+                        console.log(data.data.userInfo);
                         const token = data.data.token;
                         localStorage.setItem('userToken', token);
-                        window.location.href = 'admin_landing.html';
+                        localStorage.setItem('userInfo', JSON.stringify(data.data.userInfo));
+                        window.location.href = 'admin_landing.html'; 
                     }).catch(error => {
                         console.error('Error: ', error);
                     });
