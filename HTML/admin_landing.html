@@ -79,6 +79,12 @@
                 });
             },
             editRequestDetails(){
+                const userRoles = JSON.parse(localStorage.getItem('userInfo')).roles.split(' ');
+                if(!userRoles.includes("customer") && !userRoles.includes("admin")){
+                    console.log("Cannot Edit");
+                    alert("Unauthorized Action: You do not have permission to edit requests.");
+                    return;
+                }
                 const jwt = localStorage.getItem('userToken');
                 fetch('http://localhost:8080/requests/3131313131', {
                     method: 'GET',
@@ -100,7 +106,6 @@
                     localStorage.setItem('requestToEdit', JSON.stringify(data.data));
                     window.location.href = "edit_request_details.html";
                 }).catch(error => {
-                    // Request should cause an error
                     console.error('Error: ', error);
                 });
             }
