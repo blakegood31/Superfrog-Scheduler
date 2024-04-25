@@ -12,16 +12,17 @@ import RequestPage5 from '../views/RequestPage5.vue';
 const router = createRouter({
     //provide the history implementation to use
     history: createWebHistory(),
+    routes: [
+        { path: '/custland', component: CustomerLanding },
+        { path: '/page1', component: RequestPage1 },
+        { path: '/page2', component: RequestPage2 },
+        { path: '/page3', component: RequestPage3 },
+        { path: '/page4', component: RequestPage4 },
+        { path: '/page5', component: RequestPage5 }
+    ]
 });
 
-const routes = [
-    { path: '/custland', component: CustomerLanding },
-    { path: '/page1', component: RequestPage1 },
-    { path: '/page2', component: RequestPage2 },
-    { path: '/page3', component: RequestPage3 },
-    { path: '/page4', component: RequestPage4 },
-    { path: '/page5', component: RequestPage5 }
-];
+
 
 
 export default router;
