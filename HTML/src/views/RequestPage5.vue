@@ -26,7 +26,9 @@
 <script setup>
 import Progressbar from '../components/progressbar.vue';
 import { ref } from 'vue';
-
+import { useRouter } from 'vue-router';
+        
+const router = useRouter();
 const selectedDate = ref('');
 
 const goToPage4 = () => {

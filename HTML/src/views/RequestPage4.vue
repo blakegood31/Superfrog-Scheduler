@@ -7,7 +7,7 @@
     <div>
       <div>
         <!--all previously submtted info listed here to review-->
-        <h1>Review your Order</h1>
+        <h1>Review Your Order</h1>
 
         <!--selected date & time of the event-->
         <div>
@@ -117,7 +117,9 @@
 <script setup>
 import Progressbar from '../components/progressbar.vue';
 import { ref } from 'vue';
-
+import { useRouter } from 'vue-router';
+        
+const router = useRouter();
 const selectedDate = ref('');
 
 const goToPage3 = () => {

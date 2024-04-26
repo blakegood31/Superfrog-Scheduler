@@ -11,12 +11,12 @@ import RequestPage5 from './views/RequestPage5.vue';
 <template>
   <div>
     <router-view></router-view>
-    <CustomerLanding />
+    <!-- <CustomerLanding />
     <RequestPage1 />
     <RequestPage2 />
     <RequestPage3 />
     <RequestPage4 />
-    <RequestPage5 />
+    <RequestPage5 /> -->
   </div>
 </template>
 

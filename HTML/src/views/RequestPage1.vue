@@ -22,14 +22,14 @@
         import { ref } from 'vue';
         import { useStore } from 'vuex';
         import { useRouter } from 'vue-router';
-
+        
+        const router = useRouter();
         const selectedDate = ref('');
         const store = useStore();
-        const router = useRouter();
 
         const goToLanding = () => {
             // go to landing page
-            router.push('/custland');
+            router.push('/');
         };
 
         const goToPage2 = () => {
