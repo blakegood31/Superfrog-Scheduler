@@ -121,4 +121,6 @@ body {
 }
 
 .button:hover {
-  background-color:
+  background-color: #9079ab;
+}
+
