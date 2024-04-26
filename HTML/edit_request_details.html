@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Comment to get file back on main branch -->
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Admin Landing Page</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="CSS/admin_landing.css"> -->
+</head>
+
+<body>
+    <div class="container" id="app">
+        <!-- Title -->
+        <div class="title">Admin Portal</div>
+        <!-- Description -->
+        <div class="description">Test Page For User Authentication -- Admin & SF Student</div>
+        <!-- Button Box -->
+        <button @click="viewRequest">View Request</button>
+        <div>
+            <h2>Event Title</h2>
+            <input type="text" v-model="editedRequest.eventTitle">
+            </br>
+            </br>
+            <h2>Event Location</h2>
+            <input type="text" v-model="editedRequest.address">
+            </br>
+            </br>
+            <h2>Date & Time</h2>
+            <input type="text" v-model="editedRequest.startTime">
+            <input type="text" v-model="editedRequest.endTime">
+            </br>
+            </br>
+            <h2>Event Description</h2>
+            <input type="text" v-model="editedRequest.description">
+            </br>
+            </br>
+            <h2>Special Instructions</h2>
+            <input type="text" v-model="editedRequest.specialInstructions">
+            </br>
+            </br>
+            <h2>Involved Organizations</h2>
+            <input type="text" v-model="editedRequest.other_orgs">
+            </br>
+            </br>
+            <h2>Status</h2>
+            <p v-bind="editedRequest.status">{{editedRequest.status}}</p>
+            </br>
+            </br>
+            <button @click="saveChanges">Save Changes</button>
+            <button @click="undoChanges">Undo Changes</button>
+            <button @click="getRequestById">Get the request by ID</button>
+            <button v-if="isApproved" @click="cancelRequest">Cancel Request</button>
+            <input type="text" v-if="showCancelTextbox" v-model="cancelReason">
+        </div>
+    </div>  
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script> <!-- Added Vue.js library -->
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            editedRequest: {},
+            oldRequest: {},
+            userInfo: {},
+            isApproved: false,
+            showCancelTextbox: false,
+            secondClick: false,
+            cancelReason: ""
+        },
+        created() {
+            this.editedRequest = JSON.parse(localStorage.getItem('requestToEdit')),
+            this.oldRequest = JSON.parse(localStorage.getItem('requestToEdit')),
+            this.userInfo = JSON.parse(localStorage.getItem('userInfo')),
+            this.isApproved = this.editedRequest.status === "APPROVED" || this.editedRequest.status === "ASSIGNED"
+        },
+        methods: {
+            editRequestDetails(){
+                const jwt = localStorage.getItem('userToken');
+                fetch('http://localhost:8080/requests/3131313131', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwt
+                    }
+                }).then(response => {
+                    if(response.ok){
+                        console.log("Successful Token Usage");
+                        return response.json();
+                    }
+                    else{
+                        console.log("Token Usage Unsuccessful");
+                        console.log(response);
+                        throw new Error("Token usage failed");
+                    }
+                }).then(data => {
+                    console.log(data);
+                }).catch(error => {
+                    // Request should cause an error
+                    console.error('Error: ', error);
+                });
+            },
+            viewRequest(){
+                console.log("EDITED: " + JSON.stringify(this.editedRequest));
+                console.log("ORIGINAL: " + JSON.stringify(this.oldRequest));
+                console.log(this.userInfo);
+            },
+            saveChanges(){
+                if(this.finalizeChanges("save")){
+                    if(this.userInfo.roles.split(' ').includes("customer")){
+                        console.log("User is a customer!");
+                        this.editedRequest.status = "PENDING";
+                    }
+                    const options = {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+                        },
+                        body: JSON.stringify(this.editedRequest)
+                    };
+                    const url = 'http://127.0.0.1:8080/requests/' + this.editedRequest.id;
+                    fetch(url, options)
+                        .then(response => {
+                            if(response.ok){
+                                console.log(response);
+                                return response.json();
+                            }
+                            else{
+                                console.log("ERROR!");
+                            }
+                        }).then(data => {
+                            console.log(data.data);
+                            localStorage.setItem('requestToEdit', JSON.stringify(data.data));
+                            this.editedRequest = JSON.parse(localStorage.getItem('requestToEdit'));
+                            this.oldRequest =JSON.parse(localStorage.getItem('requestToEdit'));
+                        });
+                }
+            },
+            undoChanges(){
+                if(this.finalizeChanges("undo")){
+                    this.editedRequest = JSON.parse(localStorage.getItem('requestToEdit'));
+                }
+                return;
+            },
+            finalizeChanges(actionName){
+                var result = confirm("Would you like to " + actionName + " changes to the request?");
+                if(result){
+                    return true
+                }
+                else{
+                    alert("Changes not saved.")
+                    return false
+                }
+            },
+            getRequestById(){
+                const options = {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+                    }
+                };
+                const url = 'http://127.0.0.1:8080/requests/' + this.editedRequest.id;
+                fetch(url, options)
+                    .then(response => {
+                        if(response.ok){
+                            console.log(response);
+                            return response.json();
+                        }
+                        else{
+                            console.log("ERROR!");
+                        }
+                    }).then(data => {
+                        console.log(data.data);
+                    });
+            },
+            cancelRequest(){
+                this.showCancelTextbox = true;
+                if(this.secondClick){
+                    var result = confirm("Are you sure you want to cancel this request?");
+                    if(result){
+                        const options = {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+                            }
+                        };
+                        const url = 'http://127.0.0.1:8080/requests/' + this.editedRequest.id + "/cancel";
+                        fetch(url, options)
+                            .then(response => {
+                                if(response.ok){
+                                    console.log(response);
+                                    return response.json();
+                                }
+                                else{
+                                    console.log("ERROR!");
+                                }
+                            }).then(data => {
+                                console.log(data.data);
+                                console.log(this.cancelReason);
+                                localStorage.setItem('requestToEdit', JSON.stringify(data.data));
+                                this.editedRequest = JSON.parse(localStorage.getItem('requestToEdit'));
+                                this.oldRequest =JSON.parse(localStorage.getItem('requestToEdit')); 
+                                this.isApproved = false;
+                            });
+                        this.secondClick = false;
+                        this.showCancelTextbox = false;
+                        this.cancelReason = "";
+                    }
+                    else{
+                        alert("Request not canceled.")
+                        this.showCancelTextbox = false;
+                        this.secondClick = false;
+                    } 
+                }
+                else{
+                    this.secondClick = true;
+                }    
+            },
+        }
+    });
+</script>
+
+</body>
+</html>

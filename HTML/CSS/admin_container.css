@@ -1,0 +1,16 @@
+#content{
+    display: flex;
+}
+
+#sidebar{
+    background-color: rgb(94, 13, 160);
+    width: 20vw;
+    height: 100vh;
+    color: white;
+}
+
+#content{
+    flex: 1;
+    padding: 20px;
+}
+
