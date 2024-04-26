@@ -63,3 +63,9 @@ input {
     background-color: #9079ab;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
 }
+
+.loginError {
+    color: darkred;
+    margin-top: 5px;
+    text-align: center;
+}
