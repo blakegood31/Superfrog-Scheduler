@@ -20,8 +20,12 @@
     <script setup>
         import Progressbar from '../components/progressbar.vue';
         import { ref } from 'vue';
+        import { useStore } from 'vuex';
+        import { useRouter } from 'vue-router';
 
         const selectedDate = ref('');
+        const store = useStore();
+        const router = useRouter();
 
         const goToLanding = () => {
             // go to landing page
@@ -31,6 +35,8 @@
         const goToPage2 = () => {
             // go to page 2 if a date is selected
             if (selectedDate.value) {
+                //save the input date using vuex store
+                store.commit('updateRequestData', { selectedDate: selectedDate.value });
                 router.push('/page2');
             }
         };
