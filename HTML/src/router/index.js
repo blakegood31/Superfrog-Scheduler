@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import store from '../store';
 
 //import route components
 import CustomerLanding from '../views/CustomerLanding.vue';
@@ -23,6 +24,32 @@ const router = createRouter({
 });
 
 
+
+// use vuex store to help save input data across all request pages
+// before moving on to next page, save inputs from current page
+router.beforeEach((to, from, next) => {
+    // Update the form data in the store based on the current route
+    switch (to.path) {
+        case '/page1':
+            store.commit('updateRequestData', { selectedDate: '2099-01-01' }); 
+            break;
+        case '/page2':
+            store.commit('updateRequestData', { description: '' });
+            break;
+        case '/page3':
+            store.commit('updateRequestData', { description: '' });
+            break;
+        case '/page4':
+            store.commit('updateRequestData', { description: '' });
+            break;
+        case '/page5':
+            store.commit('updateRequestData', { description: '' });
+            break;
+        default:
+            break;
+    }
+    next();
+});
 
 
 export default router;
