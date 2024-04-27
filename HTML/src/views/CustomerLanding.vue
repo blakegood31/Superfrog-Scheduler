@@ -1,6 +1,7 @@
 <template>
     <div>
 
+
         <!-- progress bar -->
             <Progressbar />
 
@@ -41,6 +42,10 @@
             // go to page 4
             router.push('/page4');
         };
-    </script>
+    </script> 
     
-    
+=======
+  
+    </div>
+  </template>
+
