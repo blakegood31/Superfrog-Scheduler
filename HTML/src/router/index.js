@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import store from '../store';
+import {createStore } from 'vuex';
 
 //import route components
 import CustomerLanding from '../views/CustomerLanding.vue';
@@ -8,19 +8,46 @@ import RequestPage2 from '../views/RequestPage2.vue';
 import RequestPage3 from '../views/RequestPage3.vue';
 import RequestPage4 from '../views/RequestPage4.vue';
 import RequestPage5 from '../views/RequestPage5.vue';
+import SignInPage from '../views/SignInPage.vue';
+import AdminLanding from '../views/AdminLanding.vue';
+import EditRequestDetails from '../views/EditRequestDetails.vue';
+
+
 
 //create the router instance
 const router = createRouter({
     //provide the history implementation to use
     history: createWebHistory(),
     routes: [
-        { path: '/custland', component: CustomerLanding },
+        { path: '/', component: SignInPage },
+        { path: '/login', component: SignInPage},
+        { path: '/admin', component: AdminLanding},
+        { path: '/editRequest', component: EditRequestDetails},
         { path: '/page1', component: RequestPage1 },
         { path: '/page2', component: RequestPage2 },
         { path: '/page3', component: RequestPage3 },
         { path: '/page4', component: RequestPage4 },
         { path: '/page5', component: RequestPage5 }
     ]
+});
+
+// create the store
+const store = createStore({
+    state () {
+        return{
+            count: 0,
+            requestData: {}
+        }
+    },
+    mutations: {
+        increment(state) {
+            state.count++
+        },
+        updateRequestData(state, payload){
+            state.requestData = payload;
+        }
+    }
+
 });
 
 
@@ -51,5 +78,5 @@ router.beforeEach((to, from, next) => {
     next();
 });
 
-
+export {store};
 export default router;

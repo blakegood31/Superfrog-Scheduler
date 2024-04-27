@@ -8,7 +8,7 @@ defineProps({
 </script>
 
 <template>
-  <div class="ProgresBar">
+  <div class="ProgressBar">
     <el-progress :text-inside="true" :stroke-width="26" :percentage="70" />
     <el-progress
       :text-inside="false"

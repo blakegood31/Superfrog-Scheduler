@@ -101,6 +101,9 @@
     <script setup>
         import Progressbar from '../components/progressbar.vue';
         import { ref } from 'vue';
+        import { useRouter } from 'vue-router';
+        
+        const router = useRouter();
 
         //TO DO: validate moving on to next page 
 
