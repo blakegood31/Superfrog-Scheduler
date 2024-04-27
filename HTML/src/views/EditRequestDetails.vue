@@ -49,6 +49,13 @@
             <h2>Status</h2>
             <p><span :class="editedRequest.status">{{editedRequest.status}}</span></p>
         </div>
+        <div class="field" v-if="isApproved && isAdmin">
+            <h2>Assigned Student</h2>
+            <select v-model="editedRequest.superfrog">
+                <option value="null" :selected="editedRequest.superfrog === null">No Student Assigned</option>
+                <option v-for="student in students" :value="student" :selected="editedRequest.superfrog && editedRequest.superfrog.value === student.value">{{ student.firstName }} {{ student.lastName }}</option>
+            </select>
+        </div>
         </br>
         </br>
         <div id="cancel-reason">
@@ -74,6 +81,8 @@
     const showCancelTextbox = defineModel('showCancelTextbox');
     const secondClick = defineModel('secondClick');
     const cancelReason = defineModel('cancelReason');
+    const students = defineModel('allStudents');
+    const isAdmin = defineModel('isAdmin');
 
     editedRequest.value = JSON.parse(localStorage.getItem('requestToEdit'));
     oldRequest.value = JSON.parse(localStorage.getItem('requestToEdit'));
@@ -82,6 +91,35 @@
     showCancelTextbox.value = false;
     secondClick.value = false;
     cancelReason.value = "";
+    if(userInfo.value.roles.split(' ').includes("admin")){
+        const jwt = localStorage.getItem('userToken');
+        console.log("Getting all students");
+        fetch('http://localhost:8080/students', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + jwt
+            }
+        }).then(response => {
+            if(response.ok){
+                console.log("Successful Token Usage");
+                isAdmin.value = true;
+                console.log(isAdmin);
+                return response.json();
+            }
+            else{
+                console.log("Token Usage Unsuccessful");
+                console.log(response);
+                throw new Error("Token usage failed");
+            }
+        }).then(data => {
+            console.log(data);
+            students.value = data.data;
+            console.log(students.value);
+        }).catch(error => {
+            // Request should cause an error
+            console.error('Error: ', error);
+        });
+    }
 
     const editRequestDetails = () => {
         const jwt = localStorage.getItem('userToken');
@@ -115,10 +153,26 @@
     };
 
     const saveChanges = () => {
+        // If the user confirms they want to save changes
         if(finalizeChanges("save")){
+            // Set new status to pending if a customer made the change
             if(userInfo.value.roles.split(' ').includes("customer")){
                 console.log("User is a customer!");
                 editedRequest.value.status = "PENDING";
+            }
+            // If we removed a superfrog from being assigned, set the value to null and update status
+            if(editedRequest.value.superfrog === "null"){
+                editedRequest.value.superfrog = null;
+                if (editedRequest.value.status === 'ASSIGNED'){
+                    editedRequest.value.status = "APPROVED";
+                }
+                console.log(editedRequest.value.superfrog);
+            }
+            // Make sure status is assigned if a student has been assigned to the request
+            else{
+                if(editedRequest.value.status === "APPROVED"){
+                    editedRequest.value.status = "ASSIGNED";
+                }
             }
             const options = {
                 method: 'PUT',
@@ -128,6 +182,7 @@
                 },
                 body: JSON.stringify(editedRequest.value)
             };
+            console.log(options.body);
             const url = 'http://127.0.0.1:8080/requests/' + editedRequest.value.id;
             fetch(url, options)
                 .then(response => {
