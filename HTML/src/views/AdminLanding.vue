@@ -15,7 +15,7 @@
 <script setup>
     import { useRouter } from 'vue-router';
     const router = useRouter();
-    
+
     const authorizedRequest = () => {
         // Use token to make a request that requires authorization
         // Get the stored JWT
@@ -96,7 +96,8 @@
         }).then(data => {
             console.log(data);
             localStorage.setItem('requestToEdit', JSON.stringify(data.data));
-            window.location.href = "edit_request_details.html";
+            //window.location.href = "edit_request_details.html";
+            router.push('/editRequest');
         }).catch(error => {
             console.error('Error: ', error);
         });

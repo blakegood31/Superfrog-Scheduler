@@ -14,6 +14,8 @@ import RequestPage4 from './views/RequestPage4.vue';
 import RequestPage5 from './views/RequestPage5.vue';
 import SignInPage from './views/SignInPage.vue';
 import AdminLanding from './views/AdminLanding.vue';
+import EditRequestDetails from './views/EditRequestDetails.vue';
+
 
 
 createApp(App)
@@ -22,12 +24,13 @@ createApp(App)
     .use(store)
     //register components
     .component('RequestPage1', RequestPage1)
-    .component('RequestPage2', RequestPage1)
-    .component('RequestPage3', RequestPage1)
-    .component('RequestPage4', RequestPage1)
-    .component('RequestPage5', RequestPage1)
+    .component('RequestPage2', RequestPage2)
+    .component('RequestPage3', RequestPage3)
+    .component('RequestPage4', RequestPage4)
+    .component('RequestPage5', RequestPage5)
     .component('SignInPage', SignInPage)
     .component('AdminLanding', AdminLanding)
-    .mount('#app')
+    .component('EditRequestDetails', EditRequestDetails)
+    .mount('#app');
 
 //createApp(App).mount('#app')

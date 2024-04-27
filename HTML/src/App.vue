@@ -19,5 +19,9 @@ import RequestPage5 from './views/RequestPage5.vue';
     <RequestPage5 /> -->
   </div>
 </template>
-
+<style>
+  * {
+    margin: 0;
+  }
+</style>
 

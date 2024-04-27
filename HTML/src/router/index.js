@@ -10,6 +10,8 @@ import RequestPage4 from '../views/RequestPage4.vue';
 import RequestPage5 from '../views/RequestPage5.vue';
 import SignInPage from '../views/SignInPage.vue';
 import AdminLanding from '../views/AdminLanding.vue';
+import EditRequestDetails from '../views/EditRequestDetails.vue';
+
 
 
 //create the router instance
@@ -17,9 +19,10 @@ const router = createRouter({
     //provide the history implementation to use
     history: createWebHistory(),
     routes: [
-        { path: '/', component: CustomerLanding },
+        { path: '/', component: SignInPage },
         { path: '/login', component: SignInPage},
         { path: '/admin', component: AdminLanding},
+        { path: '/editRequest', component: EditRequestDetails},
         { path: '/page1', component: RequestPage1 },
         { path: '/page2', component: RequestPage2 },
         { path: '/page3', component: RequestPage3 },
