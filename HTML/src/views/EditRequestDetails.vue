@@ -5,8 +5,6 @@
             <div class="title">Admin Portal</div>
             <!-- Description -->
             <div class="description">Test Page For User Authentication -- Admin & SF Student</div>
-            <!-- Button Box -->
-            <button @click="viewRequest">View Request</button>
         </div>
         <div class="field">
             <h2>Event Title</h2>
@@ -46,7 +44,7 @@
         </br>
         </br>
         <div class="field">
-            <h2>Status</h2>
+            <h2 class="statusTitle">Status</h2>
             <p><span :class="editedRequest.status">{{editedRequest.status}}</span></p>
         </div>
         <div class="field" v-if="isApproved && isAdmin">
@@ -91,6 +89,7 @@
     showCancelTextbox.value = false;
     secondClick.value = false;
     cancelReason.value = "";
+
     if(userInfo.value.roles.split(' ').includes("admin")){
         const jwt = localStorage.getItem('userToken');
         console.log("Getting all students");
@@ -121,31 +120,6 @@
         });
     }
 
-    const editRequestDetails = () => {
-        const jwt = localStorage.getItem('userToken');
-        fetch('http://localhost:8080/requests/3131313131', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + jwt
-            }
-        }).then(response => {
-            if(response.ok){
-                console.log("Successful Token Usage");
-                return response.json();
-            }
-            else{
-                console.log("Token Usage Unsuccessful");
-                console.log(response);
-                throw new Error("Token usage failed");
-            }
-        }).then(data => {
-            console.log(data);
-        }).catch(error => {
-            // Request should cause an error
-            console.error('Error: ', error);
-        });
-    };
-
     const viewRequest = () => {
         console.log("EDITED: " + JSON.stringify(editedRequest.value));
         console.log("ORIGINAL: " + JSON.stringify(oldRequest.value));
@@ -166,13 +140,20 @@
                 if (editedRequest.value.status === 'ASSIGNED'){
                     editedRequest.value.status = "APPROVED";
                 }
+                /* if(oldRequest.value.status === 'ASSIGNED'){
+                    console.log("Remove request from " + oldRequest.value.superfrog.id);
+                } */
                 console.log(editedRequest.value.superfrog);
             }
             // Make sure status is assigned if a student has been assigned to the request
             else{
                 if(editedRequest.value.status === "APPROVED"){
                     editedRequest.value.status = "ASSIGNED";
+                    //console.log("Add request to the newly assigned student")
                 }
+                /* else if(editedRequest.value.superfrog !== null && (editedRequest.value.superfrog.id !== oldRequest.value.superfrog.id)){
+                    console.log("Remove from old student and assign to new one");
+                } */
             }
             const options = {
                 method: 'PUT',
@@ -194,7 +175,6 @@
                         console.log("ERROR!");
                     }
                 }).then(data => {
-                    console.log(data.data);
                     localStorage.setItem('requestToEdit', JSON.stringify(data.data));
                     editedRequest.value = JSON.parse(localStorage.getItem('requestToEdit'));
                     oldRequest.value =JSON.parse(localStorage.getItem('requestToEdit'));
@@ -293,21 +273,27 @@
 
     const resizeInput = (eltName) => {
         const inputElt = document.getElementById(eltName);
+        const parentWidth = inputElt.parentElement.offsetWidth;
+        const maxInputWidth = 0.9 * parentWidth; // 90% of parent width
         const inputLength = inputElt.value.length;
-        inputElt.size = inputLength;
-        console.log("Resizing");
+        if(inputElt.offsetWidth < maxInputWidth){
+            inputElt.style.width = inputLength + "ch";
+        }
     }
 </script>
 <style scoped>
     .container{
-        padding-left: 20px;
-        padding-right: 20px;
         height: 100vh;
         border: none;
         font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        padding-top: 20px;
-        background-color: #832cc9;
+        padding-top: 0px;
+        background-color: lightgrey;
         justify-content: center;
+    }
+
+    .container > .field{
+        margin-left: 20px;
+        margin-right: 20px;
     }
 
     .field{
@@ -316,15 +302,19 @@
         border: 2px solid lightgray;
         padding-left: 5px;
         padding-right: 5px;
-        padding-bottom: 10px;
-        margin: 10px 0px 10px 0px;
+        padding-bottom: 15px;
+        padding-top: 5px;
+        margin: 20px 0px 20px 0px;
         display:flex;
         flex-direction: column;
         align-items: center;
+        border: 2px solid black;
     }
 
     .field:hover{
-        border: 2px solid black;
+        /* border: 2px solid #832cc9; */
+        border-color:#832cc9;
+        background-color: #f8f0ff;
     }
 
     .field > input:focus {
@@ -332,6 +322,11 @@
         border-color: #832cc9;
         border-width: 3px;
         border-radius: 5px;
+    }
+
+    .field > input:hover {
+        border-color: #832cc9;
+        border-radius: 2px;
     }
 
     input{
@@ -348,13 +343,26 @@
     .header {
         text-align: center;
         margin-bottom: 20px;
+        background-color: #832cc9;
+        padding-bottom: 15px;
+        padding-top: 15px;
+        color: white;
+        -webkit-text-fill-color: white;
+        -webkit-text-stroke: 1px black;
+        font-weight: bold;
     }
+
     .header > div{
         margin-bottom: 10px;
     }
 
     .title{
         font-size: 40px;
+        font-weight: bold;
+    }
+
+    .header > .description {
+        font-size: 20px;
     }
 
     .REJECTED {
@@ -402,7 +410,6 @@
     }
 
     .ASSIGNED {
-        margin-top: 40px;
         background-color: rgba(75, 225, 65, 0.1);
         color: rgba(65, 215, 55, 1);
         border: 2px solid rgba(65, 215, 55, 1);
@@ -432,6 +439,10 @@
         text-align: center;
         border-radius: 5px;
         font-weight: bold;
+    }
+
+    .statusTitle{
+        margin-bottom: 10px;
     }
 
     .options{
