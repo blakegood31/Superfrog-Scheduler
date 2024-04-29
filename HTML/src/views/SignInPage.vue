@@ -62,7 +62,12 @@
             const token = data.data.token;
             localStorage.setItem('userToken', token);
             localStorage.setItem('userInfo', JSON.stringify(data.data.userInfo));
-            router.push('/admin');
+            if(data.data.userInfo.roles.split(' ').includes("admin") || data.data.userInfo.roles.split(' ').includes("superfrog")){
+                router.push('/admin');
+            }
+            else{
+                router.push('/customer');
+            }
         }).catch(error => {
             loginFailed.value = true;
             console.error('Error: ', error);

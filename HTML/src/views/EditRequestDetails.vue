@@ -60,9 +60,9 @@
             <input type="text" v-if="showCancelTextbox" v-model="cancelReason" placeholder="Enter reason for cancellation">
         </div>
         <div class="options">
+            <button @click="backToAll">Back To All Requests</button>
             <button @click="saveChanges">Save Changes</button>
             <button @click="undoChanges">Undo Changes</button>
-            <button @click="getRequestById">Get the request by ID</button>
             <button v-if="isApproved" @click="cancelRequest">Cancel Request</button>
         </div>
     </div> 
@@ -120,11 +120,9 @@
         });
     }
 
-    const viewRequest = () => {
-        console.log("EDITED: " + JSON.stringify(editedRequest.value));
-        console.log("ORIGINAL: " + JSON.stringify(oldRequest.value));
-        console.log(userInfo.value);
-    };
+    const backToAll = () => {
+        router.push('/admin');
+    }
 
     const saveChanges = () => {
         // If the user confirms they want to save changes
