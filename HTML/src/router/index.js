@@ -11,8 +11,7 @@ import RequestPage5 from '../views/RequestPage5.vue';
 import SignInPage from '../views/SignInPage.vue';
 import AdminLanding from '../views/AdminLanding.vue';
 import EditRequestDetails from '../views/EditRequestDetails.vue';
-
-
+import ViewRequest from '../views/ViewRequest.vue';
 
 //create the router instance
 const router = createRouter({
@@ -23,6 +22,8 @@ const router = createRouter({
         { path: '/login', component: SignInPage},
         { path: '/admin', component: AdminLanding},
         { path: '/editRequest', component: EditRequestDetails},
+        { path: '/viewRequest', component: ViewRequest},
+        { path: '/customer', component: CustomerLanding},
         { path: '/page1', component: RequestPage1 },
         { path: '/page2', component: RequestPage2 },
         { path: '/page3', component: RequestPage3 },

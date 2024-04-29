@@ -15,6 +15,10 @@ import RequestPage5 from './views/RequestPage5.vue';
 import SignInPage from './views/SignInPage.vue';
 import AdminLanding from './views/AdminLanding.vue';
 import EditRequestDetails from './views/EditRequestDetails.vue';
+import ViewRequest from './views/ViewRequest.vue';
+import CustomerLanding from './views/CustomerLanding.vue';
+
+
 
 
 
@@ -31,6 +35,8 @@ createApp(App)
     .component('SignInPage', SignInPage)
     .component('AdminLanding', AdminLanding)
     .component('EditRequestDetails', EditRequestDetails)
+    .component('ViewRequest', ViewRequest)
+    .component('CustomerLanding', CustomerLanding)
     .mount('#app');
 
 //createApp(App).mount('#app')
