@@ -13,7 +13,7 @@
     <div id="app" class="adminLogin"> <!-- Added id="app" -->
         <div class="loginForm">
             <div class="tcuLogo"></div> <!-- Added TCU logo div -->
-            <h2>Superfrog Director</h2>
+             <h2>Superfrog Director</h2>
             <form @submit.prevent="login"> <!-- Added submit.prevent to prevent default form submission -->
                 <label for="username">Username:</label>
                 <input type="text" id="username" v-model="username" required/> <!-- Bound input to username data property -->
@@ -73,7 +73,7 @@
                         const token = data.data.token;
                         localStorage.setItem('userToken', token);
                         localStorage.setItem('userInfo', JSON.stringify(data.data.userInfo));
-                        window.location.href = 'admin_landing.html'; 
+                        window.location.href = 'admin_landing.vue';
                     }).catch(error => {
                         console.error('Error: ', error);
                     });

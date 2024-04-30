@@ -70,7 +70,7 @@
           const token = data.data.token;
           localStorage.setItem('userToken', token);
           localStorage.setItem('userInfo', JSON.stringify(data.data.userInfo));
-          window.location.href = 'admin_landing.html';
+          window.location.href = 'admin_landing.vue';
         }).catch(error => {
           console.error('Error: ', error);
         });
