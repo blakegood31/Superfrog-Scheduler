@@ -1,14 +1,14 @@
 <template>
     <div class="container" id="app">
         <!-- Title -->
-        <div class="title">Admin Portal</div>
-        <!-- Description -->
-        <div class="description">Test Page For User Authentication -- Admin & SF Student</div>
+        <!-- <div class="title">Admin Portal</div>
+        <div class="description">Test Page For User Authentication -- Admin & SF Student</div> -->
+        <AdminHeader />
         <!-- Button Box -->
-        <button @click="authorizedRequest">Click to visit priviledged page</button>
+        <!-- <button @click="authorizedRequest">Click to visit priviledged page</button>
         <button @click="unauthorizedRequest">Click to visit priviledged page without token</button>
         <button @click="editRequestDetails">Click to edit a request's details as admin</button>
-        <button @click="viewApprovedRequests">Click to view approved requests -- Admin Only</button>
+        <button @click="viewApprovedRequests">Click to view approved requests -- Admin Only</button> -->
         <table v-if="showTable">
             <tr>
                 <th>Event</th>
@@ -29,7 +29,7 @@
                 <td>{{ request.endTime }}</td>
                 <td>{{ request.description }}</td>
                 <td>{{ request.superfrog ? request.superfrog.lastName + ', ' + request.superfrog.firstName : 'Unassigned' }}</td>
-                <td><span :class="request.status">{{request.status}}</span></td>
+                <td><StatusBadge :customClass="request.status">{{request.status}}</StatusBadge></td>
                 <td>
                     <span>
                         <button v-if="canEdit && request.status !== 'REJECTED' && request.status !== 'CANCELLED' && request.status !== 'COMPLETED'" @click="editRequestDetails(request.id)">Edit</button>
@@ -48,6 +48,8 @@
 </template>
 <script setup>
     import { useRouter } from 'vue-router';
+    import AdminHeader from '../components/adminHeader.vue';
+    import StatusBadge from '../components/statusBadge.vue';
     const router = useRouter();
 
     const allRequests = defineModel('allRequests');
@@ -266,109 +268,5 @@
     tr:hover {
         background-color: #c39fed; /* Change background color when row is focused */
         outline: none;
-    }
-
-    tr:hover > td > .REJECTED{
-        background-color: rgb(255, 230, 230);
-    }
-
-    tr:hover > td > .CANCELLED{
-        background-color: rgb(255, 230, 230);
-    }
-
-    tr:hover > td > .ASSIGNED{
-        background-color: rgb(230, 255, 230);
-    }
-
-    tr:hover > td > .APPROVED{
-        background-color: rgb(230, 255, 230);
-    }
-
-    tr:hover > td > .COMPLETED{
-        background-color: rgb(230, 255, 230);
-    }
-
-    tr:hover > td > .INCOMPLETE{
-        background-color: rgb(255, 249, 223);
-    }
-
-    tr:hover > td > .PENDING{
-        background-color: rgb(255, 249, 223);
-    }
-
-    .REJECTED {
-        margin-top: 40px;
-        background-color: rgba(255, 50, 40, 0.1);
-        color: rgba(230, 0, 0, 1);
-        border: 2px solid rgba(230, 0, 0, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .CANCELLED {
-        margin-top: 40px;
-        background-color: rgba(255, 50, 40, 0.1);
-        color: rgba(230, 0, 0, 1);
-        border: 2px solid rgba(230, 0, 0, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .APPROVED {
-        margin-top: 40px;
-        background-color: rgba(75, 225, 65, 0.1);
-        color: rgba(65, 215, 55, 1);
-        border: 2px solid rgba(65, 215, 55, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .COMPLETED {
-        margin-top: 40px;
-        background-color: rgba(75, 225, 65, 0.1);
-        color: rgba(65, 215, 55, 1);
-        border: 2px solid rgba(65, 215, 55, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .ASSIGNED {
-        background-color: rgba(75, 225, 65, 0.1);
-        color: rgba(65, 215, 55, 1);
-        border: 2px solid rgba(65, 215, 55, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .PENDING {
-        margin-top: 40px;
-        background-color: rgba(245, 195, 0, 0.15);
-        color: rgba(245, 195, 0, 1);
-        border: 2px solid rgba(245, 195, 0, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .INCOMPLETE {
-        margin-top: 40px;
-        background-color: rgba(245, 195, 0, 0.15);
-        color: rgba(245, 195, 0, 1);
-        border: 2px solid rgba(245, 195, 0, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
     }
 </style>

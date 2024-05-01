@@ -1,11 +1,11 @@
 <template>
     <div class="container" id="app">
         <!-- Title -->
-        <div class="header">
+        <!-- <div class="header">
             <div class="title">Admin Portal</div>
-            <!-- Description -->
             <div class="description">Test Page For User Authentication -- Admin & SF Student</div>
-        </div>
+        </div> -->
+        <AdminHeader/>
         <div class="field">
             <h2>Event Title</h2>
             <p>{{ request.eventTitle }}</p>
@@ -45,7 +45,8 @@
         </br>
         <div class="field">
             <h2 class="statusTitle">Status</h2>
-            <p><span :class="request.status">{{request.status}}</span></p>
+            <!-- <p><span :class="request.status">{{request.status}}</span></p> -->
+            <StatusBadge :customClass="request.status">{{ request.status }}</StatusBadge>
         </div>
         <div class="field">
             <h2>Assigned Student</h2>
@@ -58,9 +59,12 @@
  
 </template>
 <script setup>
+    import AdminHeader from '../components/adminHeader.vue';
     import { useRouter } from 'vue-router';
+    import StatusBadge from '../components/statusBadge.vue';
     const router = useRouter();
     const request = defineModel('request');
+
     request.value = JSON.parse(localStorage.getItem('requestToView'));
 
     const backToAll = () => {
@@ -151,7 +155,7 @@
         font-size: 20px;
     }
 
-    .REJECTED {
+    /* .REJECTED {
         margin-top: 40px;
         background-color: rgba(255, 50, 40, 0.1);
         color: rgba(230, 0, 0, 1);
@@ -225,7 +229,7 @@
         text-align: center;
         border-radius: 5px;
         font-weight: bold;
-    }
+    } */
 
     .statusTitle{
         margin-bottom: 10px;
@@ -261,3 +265,4 @@
     }
 
 </style>
+

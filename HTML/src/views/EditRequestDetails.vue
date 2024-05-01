@@ -1,11 +1,11 @@
 <template>
     <div class="container" id="app">
         <!-- Title -->
-        <div class="header">
+        <!-- <div class="header">
             <div class="title">Admin Portal</div>
-            <!-- Description -->
             <div class="description">Test Page For User Authentication -- Admin & SF Student</div>
-        </div>
+        </div> -->
+        <AdminHeader/>
         <div class="field">
             <h2>Event Title</h2>
             <input type="text" v-model="editedRequest.eventTitle" @input="resizeInput('title')" @focus="resizeInput('title')" id="title">
@@ -45,7 +45,7 @@
         </br>
         <div class="field">
             <h2 class="statusTitle">Status</h2>
-            <p><span :class="editedRequest.status">{{editedRequest.status}}</span></p>
+            <StatusBadge :customClass="editedRequest.status">{{ editedRequest.status }}</StatusBadge>
         </div>
         <div class="field" v-if="isApproved && isAdmin">
             <h2>Assigned Student</h2>
@@ -70,6 +70,9 @@
 </template>
 <script setup>
     import { useRouter } from 'vue-router';
+    import AdminHeader from '../components/adminHeader.vue';
+    import StatusBadge from '../components/statusBadge.vue';
+
     const router = useRouter();
 
     const editedRequest = defineModel('editedRequest');
@@ -361,82 +364,6 @@
 
     .header > .description {
         font-size: 20px;
-    }
-
-    .REJECTED {
-        margin-top: 40px;
-        background-color: rgba(255, 50, 40, 0.1);
-        color: rgba(230, 0, 0, 1);
-        border: 2px solid rgba(230, 0, 0, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .CANCELLED {
-        margin-top: 40px;
-        background-color: rgba(255, 50, 40, 0.1);
-        color: rgba(230, 0, 0, 1);
-        border: 2px solid rgba(230, 0, 0, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .APPROVED {
-        margin-top: 40px;
-        background-color: rgba(75, 225, 65, 0.1);
-        color: rgba(65, 215, 55, 1);
-        border: 2px solid rgba(65, 215, 55, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .COMPLETED {
-        margin-top: 40px;
-        background-color: rgba(75, 225, 65, 0.1);
-        color: rgba(65, 215, 55, 1);
-        border: 2px solid rgba(65, 215, 55, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .ASSIGNED {
-        background-color: rgba(75, 225, 65, 0.1);
-        color: rgba(65, 215, 55, 1);
-        border: 2px solid rgba(65, 215, 55, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .PENDING {
-        margin-top: 40px;
-        background-color: rgba(245, 195, 0, 0.15);
-        color: rgba(245, 195, 0, 1);
-        border: 2px solid rgba(245, 195, 0, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-
-    .INCOMPLETE {
-        margin-top: 40px;
-        background-color: rgba(245, 195, 0, 0.15);
-        color: rgba(245, 195, 0, 1);
-        border: 2px solid rgba(245, 195, 0, 1);
-        padding: 4px 8px;
-        text-align: center;
-        border-radius: 5px;
-        font-weight: bold;
     }
 
     .statusTitle{
