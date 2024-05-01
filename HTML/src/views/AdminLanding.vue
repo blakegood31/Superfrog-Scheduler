@@ -58,7 +58,7 @@
 
     // Get all requests from backend
     const jwt = localStorage.getItem('userToken');
-    fetch('http://localhost:8080/requests', {
+    fetch('http://localhost:8081/requests', {
         method: 'GET',
         headers: {
             'Authorization': 'Bearer ' + jwt
@@ -96,7 +96,7 @@
         // Get the stored JWT
         const jwt = localStorage.getItem('userToken');
         // Make the request
-        fetch('http://localhost:8080/users', {
+        fetch('http://localhost:8081/users', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + jwt
@@ -122,7 +122,7 @@
     const unauthorizedRequest = () => {
         // Test method for making a priviledged request with an invalid token
         // Make the request
-        fetch('http://localhost:8080/users', {
+        fetch('http://localhost:8081/users', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + "BaDT0k3nTe5T"
@@ -153,7 +153,7 @@
             return;
         }
         const jwt = localStorage.getItem('userToken');
-        const url = 'http://localhost:8080/requests/' + requestId;
+        const url = 'http://localhost:8081/requests/' + requestId;
         fetch(url, {
             method: 'GET',
             headers: {
@@ -181,7 +181,7 @@
     const viewRequest = (requestId) => {
         const userRoles = JSON.parse(localStorage.getItem('userInfo')).roles.split(' ');
         const jwt = localStorage.getItem('userToken');
-        const url = 'http://localhost:8080/requests/' + requestId;
+        const url = 'http://localhost:8081/requests/' + requestId;
         fetch(url, {
             method: 'GET',
             headers: {
@@ -208,7 +208,7 @@
 
     const viewApprovedRequests = () => {
         const jwt = localStorage.getItem('userToken');
-        fetch('http://localhost:8080/requests/approved', {
+        fetch('http://localhost:8081/requests/approved', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + jwt

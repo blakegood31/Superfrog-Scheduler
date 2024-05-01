@@ -33,7 +33,7 @@
                 // Get the stored JWT
                 const jwt = localStorage.getItem('userToken');
                 // Make the request
-                fetch('http://localhost:8080/users', {
+                fetch('http://localhost:8081/users', {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + jwt
@@ -58,7 +58,7 @@
             unauthorizedRequest() {
                 // Test method for making a priviledged request with an invalid token
                 // Make the request
-                fetch('http://localhost:8080/users', {
+                fetch('http://localhost:8081/users', {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + "BaDT0k3nTe5T"
@@ -88,7 +88,7 @@
                     return;
                 }
                 const jwt = localStorage.getItem('userToken');
-                fetch('http://localhost:8080/requests/3131313131', {
+                fetch('http://localhost:8081/requests/3131313131', {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + jwt
@@ -113,7 +113,7 @@
             },
             viewApprovedRequests(){
                 const jwt = localStorage.getItem('userToken');
-                fetch('http://localhost:8080/requests/approved', {
+                fetch('http://localhost:8081/requests/approved', {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + jwt

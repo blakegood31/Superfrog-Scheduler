@@ -40,7 +40,7 @@
     methods: {
       login() {
         // Redirect to a specific page after successful login
-        fetch('http://localhost:8080/login', {
+        fetch('http://localhost:8081/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -93,7 +93,7 @@
     if(userInfo.value.roles.split(' ').includes("admin")){
         const jwt = localStorage.getItem('userToken');
         console.log("Getting all students");
-        fetch('http://localhost:8080/students', {
+        fetch('http://localhost:8081/students', {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + jwt
@@ -162,7 +162,7 @@
                 body: JSON.stringify(editedRequest.value)
             };
             console.log(options.body);
-            const url = 'http://127.0.0.1:8080/requests/' + editedRequest.value.id;
+            const url = 'http://127.0.0.1:8081/requests/' + editedRequest.value.id;
             fetch(url, options)
                 .then(response => {
                     if(response.ok){
@@ -205,7 +205,7 @@
                 'Authorization': 'Bearer ' + localStorage.getItem('userToken')
             }
         };
-        const url = 'http://127.0.0.1:8080/requests/' + editedRequest.value.id;
+        const url = 'http://127.0.0.1:8081/requests/' + editedRequest.value.id;
         fetch(url, options)
             .then(response => {
                 if(response.ok){
@@ -236,7 +236,7 @@
                         'Authorization': 'Bearer ' + localStorage.getItem('userToken')
                     }
                 };
-                const url = 'http://127.0.0.1:8080/requests/' + editedRequest.value.id + "/cancel";
+                const url = 'http://127.0.0.1:8081/requests/' + editedRequest.value.id + "/cancel";
                 fetch(url, options)
                     .then(response => {
                         if(response.ok){
