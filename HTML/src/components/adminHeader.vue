@@ -2,7 +2,7 @@
     <div class="AdminHeader">
         <div class="title">Admin Portal</div>
         <!-- Description -->
-        <div class="description">Test Page For User Authentication -- Admin & SF Student</div>
+        <!-- <div class="description">Test Page For User Authentication -- Admin & SF Student</div> -->
     </div>
 </template>
 <script setup>
@@ -11,9 +11,10 @@
 </script>
 <style scoped>
     .AdminHeader {
+        width: auto;
         text-align: center;
         margin-bottom: 20px;
-        background-color: #832cc9;
+        background-color: #531e7e;
         padding-bottom: 15px;
         padding-top: 15px;
         color: white;
@@ -27,7 +28,7 @@
     }
 
     .AdminHeader > .title{
-        font-size: 40px;
+        font-size: min(4vw, 45px);
         font-weight: bold;
     }
 
