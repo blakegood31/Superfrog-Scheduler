@@ -257,16 +257,20 @@
     
     th, td {
         border: 1px solid black; 
-        padding: 8px; 
     }
     
     th {
-        background-color: #f2f2f2; 
+        background-color: lightgrey; 
+        padding: 3px;
     }
 
     td{
         text-align: center;
-        
+        padding-top: 10px; 
+        padding-bottom: 10px;
+        padding-right: 12px;
+        padding-left: 12px;
+
     }
 
     tr:hover {
