@@ -14,6 +14,7 @@
     <span :class="customClass"><slot></slot></span>
 </template>
 <style scoped>
+
     .REJECTED {
         background-color: rgb(255, 230, 230);
         color: rgba(230, 0, 0, 1);

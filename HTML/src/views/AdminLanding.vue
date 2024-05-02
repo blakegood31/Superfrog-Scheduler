@@ -1,55 +1,54 @@
 <template>
-    <div class="container" id="app">
-        <!-- Title -->
-        <!-- <div class="title">Admin Portal</div>
-        <div class="description">Test Page For User Authentication -- Admin & SF Student</div> -->
-        <AdminHeader />
-        <!-- Button Box -->
-        <!-- <button @click="authorizedRequest">Click to visit priviledged page</button>
-        <button @click="unauthorizedRequest">Click to visit priviledged page without token</button>
-        <button @click="editRequestDetails">Click to edit a request's details as admin</button>
-        <button @click="viewApprovedRequests">Click to view approved requests -- Admin Only</button> -->
-        <table v-if="showTable">
-            <tr>
-                <th>Event</th>
-                <th>Customer Name</th>
-                <th>Location</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Description</th>
-                <th>Superfrog</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-            <tr v-for="request in allRequests">
-                <td>{{ request.eventTitle }}</td>
-                <td>{{ request.customer.lname }}, {{ request.customer.fname }}</td>
-                <td>{{ request.address }}</td>
-                <td>{{ request.startTime }}</td>
-                <td>{{ request.endTime }}</td>
-                <td>{{ request.description }}</td>
-                <td>{{ request.superfrog ? request.superfrog.lastName + ', ' + request.superfrog.firstName : 'Unassigned' }}</td>
-                <td><StatusBadge :customClass="request.status">{{request.status}}</StatusBadge></td>
-                <td>
-                    <span>
-                        <button v-if="canEdit && request.status !== 'REJECTED' && request.status !== 'CANCELLED' && request.status !== 'COMPLETED'" @click="editRequestDetails(request.id)">Edit</button>
-                    </span>
-                    <span>
-                        <button @click="viewRequest(request.id)">View</button>
-                    </span>
-                    <span>
-                        <button v-if="request.status === 'PENDING'">Approve</button>
-                    </span>
-                </td>
-            </tr>
-        </table>
-
+    <!-- <div class="container" id="app"> -->
+    <div id="app">
+        <Sidebar>
+            <div class="main-content">
+                <AdminHeader />
+                <h2 class="pageTitle"> All Superfrog Requests</h2>
+                <table v-if="showTable">
+                    <tr>
+                        <th>Event</th>
+                        <th>Customer Name</th>
+                        <th>Location</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Description</th>
+                        <th>Superfrog</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr v-for="request in allRequests">
+                        <td>{{ request.eventTitle }}</td>
+                        <td>{{ request.customer.lname }}, {{ request.customer.fname }}</td>
+                        <td>{{ request.address }}</td>
+                        <td>{{ request.startTime }}</td>
+                        <td>{{ request.endTime }}</td>
+                        <td>{{ request.description }}</td>
+                        <td>{{ request.superfrog ? request.superfrog.lastName + ', ' + request.superfrog.firstName : 'Unassigned' }}</td>
+                        <td><StatusBadge :customClass="request.status">{{request.status}}</StatusBadge></td>
+                        <td>
+                            <span>
+                                <button v-if="canEdit && request.status !== 'REJECTED' && request.status !== 'CANCELLED' && request.status !== 'COMPLETED'" @click="editRequestDetails(request.id)">Edit</button>
+                            </span>
+                            <span>
+                                <button @click="viewRequest(request.id)">View</button>
+                            </span>
+                            <span>
+                                <button v-if="request.status === 'PENDING'">Approve</button>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </Sidebar>
     </div>
 </template>
 <script setup>
     import { useRouter } from 'vue-router';
     import AdminHeader from '../components/adminHeader.vue';
     import StatusBadge from '../components/statusBadge.vue';
+    import Sidebar from '../components/Sidebar.vue'; 
+
     const router = useRouter();
 
     const allRequests = defineModel('allRequests');
@@ -235,38 +234,58 @@
     };
 </script>
 <style scoped>
-    .container{
+    .main-content{
         height: 100vh;
+        width: 100%;
         border: none;
+        box-sizing: border-box;
         font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        padding-top: 0px;
-        margin: 0 auto;
-        background-color: white;
+        padding: 0;
+        margin: 0;
+        background-color: white; 
+        display: flex;
+        flex-direction: column;
     }
 
     table {
-        border-collapse: collapse; /* Merge cell borders */
-        width: 95%; /* Set table width */
-        margin: 20px auto; /* Center the table horizontally */
+        border-collapse: collapse;
         background-color: rgba(0, 0, 0, 0.05);
+        margin-right: 2%;
+        margin-left: 2%;
+
     }
     
     th, td {
-        border: 1px solid black; /* Add border to table cells */
-        padding: 8px; /* Optional: add padding */
+        border: 1px solid black; 
     }
     
     th {
-        background-color: #f2f2f2; /* Optional: add background color to headers */
+        background-color: lightgrey; 
+        padding: 3px;
     }
 
     td{
         text-align: center;
-        width: auto;
+        padding-top: 10px; 
+        padding-bottom: 10px;
+        padding-right: 12px;
+        padding-left: 12px;
+
     }
 
     tr:hover {
-        background-color: #c39fed; /* Change background color when row is focused */
+        background-color: #c39fed;
         outline: none;
+    } 
+
+    .pageTitle{
+        text-align: center;
+        padding-bottom: 10px;
+        margin-right: 20%;
+        margin-left: 20%;
+        margin-bottom: 20px;
+        font-size: min(2vw, 35px);
+        color: #531e7e;
+        border-bottom: 1px solid black;
     }
 </style>

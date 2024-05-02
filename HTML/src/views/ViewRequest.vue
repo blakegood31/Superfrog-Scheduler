@@ -1,67 +1,72 @@
 <template>
-    <div class="container" id="app">
-        <!-- Title -->
-        <!-- <div class="header">
-            <div class="title">Admin Portal</div>
-            <div class="description">Test Page For User Authentication -- Admin & SF Student</div>
-        </div> -->
-        <AdminHeader/>
-        <div class="field">
-            <h2>Event Title</h2>
-            <p>{{ request.eventTitle }}</p>
-        </div>
-        </br>
-        </br>
-        <div class="field">
-            <h2>Event Location</h2>
-            <p>{{ request.address }}</p>
-        </div>
-        </br>
-        </br>
-        <div class="field">
-            <h2>Date & Time</h2>
-            <p> Start: {{request.startTime}}</p>
-            <p> End: {{request.endTime}}</p>
-        </div>
-        </br>
-        </br>
-        <div class="field">
-            <h2>Event Description</h2>
-            <p> {{ request.description }}</p>
-        </div>
-        </br>
-        </br>
-        <div class="field">
-            <h2>Special Instructions</h2>
-            <p>{{ request.specialInstructions }}</p>
-        </div>
-        </br>
-        </br> 
-        <div class="field">
-            <h2>Involved Organizations</h2>
-            <p>{{ request.other_orgs }}</p>
-        </div> 
-        </br>
-        </br>
-        <div class="field">
-            <h2 class="statusTitle">Status</h2>
-            <!-- <p><span :class="request.status">{{request.status}}</span></p> -->
-            <StatusBadge :customClass="request.status">{{ request.status }}</StatusBadge>
-        </div>
-        <div class="field">
-            <h2>Assigned Student</h2>
-            <p>{{ request.superfrog ? request.superfrog.firstName + ' ' + request.superfrog.lastName : 'Unassigned' }}</p>
-        </div>   
-        <div>
-            <button @click="backToAll">Back to All Requests</button>
-        </div>
-    </div> 
+    <div id="app">
+        <Sidebar>
+            <div class="container" id="app">
+                <!-- Title -->
+                <!-- <div class="header">
+                    <div class="title">Admin Portal</div>
+                    <div class="description">Test Page For User Authentication -- Admin & SF Student</div>
+                </div> -->
+                <AdminHeader/>
+                <div class="field">
+                    <h2>Event Title</h2>
+                    <p>{{ request.eventTitle }}</p>
+                </div>
+                </br>
+                </br>
+                <div class="field">
+                    <h2>Event Location</h2>
+                    <p>{{ request.address }}</p>
+                </div>
+                </br>
+                </br>
+                <div class="field">
+                    <h2>Date & Time</h2>
+                    <p> Start: {{request.startTime}}</p>
+                    <p> End: {{request.endTime}}</p>
+                </div>
+                </br>
+                </br>
+                <div class="field">
+                    <h2>Event Description</h2>
+                    <p> {{ request.description }}</p>
+                </div>
+                </br>
+                </br>
+                <div class="field">
+                    <h2>Special Instructions</h2>
+                    <p>{{ request.specialInstructions }}</p>
+                </div>
+                </br>
+                </br> 
+                <div class="field">
+                    <h2>Involved Organizations</h2>
+                    <p>{{ request.other_orgs }}</p>
+                </div> 
+                </br>
+                </br>
+                <div class="field">
+                    <h2 class="statusTitle">Status</h2>
+                    <!-- <p><span :class="request.status">{{request.status}}</span></p> -->
+                    <StatusBadge :customClass="request.status">{{ request.status }}</StatusBadge>
+                </div>
+                <div class="field">
+                    <h2>Assigned Student</h2>
+                    <p>{{ request.superfrog ? request.superfrog.firstName + ' ' + request.superfrog.lastName : 'Unassigned' }}</p>
+                </div>   
+                <div>
+                    <button @click="backToAll">Back to All Requests</button>
+                </div>
+            </div> 
+        </Sidebar>
+    </div>
  
 </template>
 <script setup>
     import AdminHeader from '../components/adminHeader.vue';
     import { useRouter } from 'vue-router';
     import StatusBadge from '../components/statusBadge.vue';
+    import Sidebar from '../components/Sidebar.vue';
     const router = useRouter();
     const request = defineModel('request');
 

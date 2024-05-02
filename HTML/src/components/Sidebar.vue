@@ -1,68 +1,73 @@
 <template>
-    <div class="sidebar">
-        <div class="top">
-            <div class="TCU_logo">
-                <img src="https://dejpknyizje2n.cloudfront.net/gallery/tcu-horned-frogs-ncaa-logo-sticker-ncaa03-5076-dbf0a0.png" alt="TCU_logo">
+    <div class="container">
+        <div class="sidebar">
+            <div class="top">
+                <div class="TCU_logo">
+                    <img src="https://dejpknyizje2n.cloudfront.net/gallery/tcu-horned-frogs-ncaa-logo-sticker-ncaa03-5076-dbf0a0.png" alt="TCU_logo">
+                </div>
             </div>
+            <ul>
+                <li>
+                    <a href="#" @click="toggleStudents">
+                        <i class="bx bxs-id-card"></i>
+                        <span class="nav-item">SuperFrog Students</span>
+                        <i :class="{'bx bxs-chevron-down': !showStudents, 'bxs-chevron-up': showStudents}" id="btnStudents"></i>
+                    </a>
+                    <ul id="studentOptions" v-show="showStudents">
+                        <li>
+                            <a href="#">
+                                <span class="nav-item">Add a New Student</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="nav-item">View All Students</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <a href="#" class="with-chevron" @click="toggleRequests">
+                        <i class="bx bxs-message-edit"></i>
+                        <span class="nav-item">Requests</span>
+                        <i :class="{'bx bxs-chevron-down': !showRequests, 'bxs-chevron-up': showRequests}" id="btnRequests"></i>
+                    </a>
+                    <ul id="requestOptions" v-show="showRequests">
+                        <li>
+                            <a href="#">
+                                <span class="nav-item">Add a New Request</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="nav-item">View All Requests</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <a href="#">
+                        <i class="bx bxs-calendar"></i>
+                        <span class="nav-item">Calendar</span>
+                    </a>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <a href="#">
+                        <i class="bx bxs-report"></i>
+                        <span class="nav-item">Reports</span>
+                    </a>
+                </li>
+            </ul>
         </div>
-        <ul>
-            <li>
-                <a href="#" @click="toggleStudents">
-                    <i class="bx bxs-id-card"></i>
-                    <span class="nav-item">SuperFrog Students</span>
-                    <i :class="{'bx bxs-chevron-down': !showStudents, 'bxs-chevron-up': showStudents}" id="btnStudents"></i>
-                </a>
-                <ul id="studentOptions" v-show="showStudents">
-                    <li>
-                        <a href="#">
-                            <span class="nav-item">Add a New Student</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="nav-item">View All Students</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                <a href="#" class="with-chevron" @click="toggleRequests">
-                    <i class="bx bxs-message-edit"></i>
-                    <span class="nav-item">Requests</span>
-                    <i :class="{'bx bxs-chevron-down': !showRequests, 'bxs-chevron-up': showRequests}" id="btnRequests"></i>
-                </a>
-                <ul id="requestOptions" v-show="showRequests">
-                    <li>
-                        <a href="#">
-                            <span class="nav-item">Add a New Request</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <span class="nav-item">View All Requests</span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                <a href="#">
-                    <i class="bx bxs-calendar"></i>
-                    <span class="nav-item">Calendar</span>
-                </a>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                <a href="#">
-                    <i class="bx bxs-report"></i>
-                    <span class="nav-item">Reports</span>
-                </a>
-            </li>
-        </ul>
+        <div class="page-content">
+            <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -86,6 +91,17 @@
 </script>
 
 <style scoped>
+    .container{
+        display: flex;
+        width: 100%;
+        height: 100vh; 
+    }
+
+    .page-content{
+        width: 100%;
+    }
+
+
     .TCU_logo img {
         width: 45%;
         height: auto;
@@ -93,15 +109,27 @@
     }
 
     .sidebar {
-        position: absolute;
+        /* position: absolute;
         top: 0;
-        left: 0;
+        left: 0; */
         background-color: #531e7e;
-        width: 25%;
+        width: 20vw;
+        max-width: 300px;  
+        min-width: 150px;
         height: 100%;
         color: white;
         overflow: hidden;
-        transition: width 0.3s ease;
+        /* transition: width 0.3s ease; */
+    }
+
+    .sidebar:hover{
+        box-shadow: none;
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+    .sidebar:not(:hover){
+        box-shadow: inset -4px -3px 6px 0px black;
+        transition: box-shadow 0.3s ease-in-out;
     }
 
     .sidebar ul {
@@ -112,7 +140,7 @@
 
     .sidebar a {
         text-decoration: none;
-        font-size: 250%;
+        font-size: 150%;
         color: inherit;
         display: flow;
         justify-content: space-between;
