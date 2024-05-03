@@ -1,32 +1,23 @@
 <template>
   <div>
-
     <!-- progress bar -->
     <Progressbar />
 
     <div>
       <div>
-        <!--all previously submtted info listed here to review-->
+        <!--all previously submitted info listed here to review-->
         <h1>Review Your Order</h1>
 
         <!--selected date & time of the event-->
         <div>
           <h3>Selected Date & Time</h3>
           <!--table w specific time information-->
-          <!--TO DO: add time info from input-->
           <table>
             <tr>
               <th>Date</th>
-              <td>08/31/2022</td>
+              <td>{{ store.requestData.selectedDate }}</td>
             </tr>
-            <tr>
-              <th>Start Time</th>
-              <td>9am</td>
-            </tr>
-            <tr>
-              <th>End Time</th>
-              <td>1pm</td>
-            </tr>
+            <!-- You can add time here if you capture it -->
           </table>
         </div>
 
@@ -34,19 +25,18 @@
         <div>
           <h2>Personal Contact Information</h2>
           <!--table w specific contact info-->
-          <!--TO DO: add specific contact info from input-->
           <table>
             <tr>
               <th>Name</th>
-              <td>John Doe</td>
+              <td>{{ store.requestData.fname }} {{ store.requestData.lname }}</td>
             </tr>
             <tr>
               <th>Phone</th>
-              <td>(817)257-1234</td>
+              <td>{{ store.requestData.pnumber }}</td>
             </tr>
             <tr>
               <th>Email</th>
-              <td>johndoe@gmail.com</td>
+              <td>{{ store.requestData.email }}</td>
             </tr>
           </table>
         </div>
@@ -55,35 +45,34 @@
         <div>
           <h2>Event Information</h2>
           <!--table w specific event information-->
-          <!--TO DO: add specific event info from input-->
           <table>
             <tr>
               <th>Event Name</th>
-              <td>John's Graduation Party</td>
+              <td>{{ store.requestData.etitle }}</td>
             </tr>
             <tr>
               <th>Organization</th>
-              <td></td>
+              <td>{{ store.requestData.orgname }}</td>
             </tr>
             <tr>
               <th>Event Location</th>
-              <td></td>
+              <td>{{ store.requestData.address }}</td>
             </tr>
             <tr>
               <th>Event Type</th>
-              <td>Private/Residential</td>
+              <td>{{ store.requestData.eventType }}</td>
             </tr>
             <tr>
               <th>Any expenses or benefits to the spirit team members</th>
-                <td></td>
+              <td>{{ store.requestData.benefits }}</td>
             </tr>
             <tr>
               <th>Outside organizations</th>
-              <td></td>
+              <td>{{ store.requestData.outorgs }}</td>
             </tr>
             <tr>
               <th>Description of Event</th>
-              <td></td>
+              <td>{{ store.requestData.description }}</td>
             </tr>
           </table>
         </div>
@@ -110,27 +99,36 @@
     <button @click="goToPage3">Back</button>
 
     <!-- Move forward to page 5 -->
-    <button @click="goToPage5">Submit</button>
+    <button @click="submitRequest">Submit</button>
   </div>
 </template>
 
 <script setup>
 import Progressbar from '../components/progressbar.vue';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-        
+import { useStore } from 'pinia';
+
 const router = useRouter();
-const selectedDate = ref('');
+const store = useStore();
 
 const goToPage3 = () => {
   // go to page 3
   router.push('/page3');
 };
 
-//TO DO: add any validations to move on
-const goToPage5 = () => {
-  // go to page 5
-  router.push('/page5');
+const submitRequest = async () => {
+  // Update the request status to 'Pending'
+  store.updateRequestData({ status: 'Pending' });
+
+  // Send the request data to the backend
+  try {
+    await store.sendRequestData();
+    // Redirect to the confirmation page
+    router.push('/page5');
+  } catch (error) {
+    // Handle any errors
+    console.error('Failed to submit request:', error);
+    // Optionally, display an error message to the user
+  }
 };
 </script>
-
