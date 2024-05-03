@@ -116,8 +116,6 @@
         actions: true
     };
 
-    const titleVisible = computed(() => showColumns.value.eventTitle);
-
     const saveShowSelection = () => {
         const colDict = showColumns.value;
         Object.keys(colDict).forEach(key => {
@@ -326,6 +324,10 @@
 
     #showFieldsGridButton:hover {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 1.0);
+    }
+
+    #showFieldsGridButton:active {
+        box-shadow: none;
     }
 
     #showFieldButton {
