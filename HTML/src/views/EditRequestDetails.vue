@@ -43,6 +43,16 @@
                     <h2>Involved Organizations</h2>
                     <input type="text" v-model="editedRequest.other_orgs" @input="resizeInput('other-orgs')" @focus="resizeInput('other-orgs')" id="other-orgs">
                 </div> 
+                <div class="field">
+                    <h2>Distance from TCU</h2>
+                    <p><input type="text" v-model="editedRequest.milesFromTCU" @input="resizeInput('distance')" @focus="resizeInput('distance')" id="distance"> miles</p>
+                </div>
+                </br>
+                </br>
+                <div class="field">
+                    <h2>Event Type</h2>
+                    <input type="text" v-model="editedRequest.eventType" @input="resizeInput('eventType')" @focus="resizeInput('eventType')" id="eventType">
+                </div>
                 </br>
                 </br>
                 <div class="field">
@@ -329,7 +339,19 @@
         border-radius: 5px;
     }
 
+    .field > p > input:focus {
+        outline-style:none; 
+        border-color: #832cc9;
+        border-width: 3px;
+        border-radius: 5px;
+    }
+
     .field > input:hover {
+        border-color: #832cc9;
+        border-radius: 2px;
+    }
+
+    .field > p > input:hover {
         border-color: #832cc9;
         border-radius: 2px;
     }

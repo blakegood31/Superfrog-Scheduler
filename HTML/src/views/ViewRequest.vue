@@ -46,6 +46,18 @@
                 </br>
                 </br>
                 <div class="field">
+                    <h2>Distance from TCU</h2>
+                    <p>{{ request.milesFromTCU }} miles</p>
+                </div> 
+                </br>
+                </br>
+                <div class="field">
+                    <h2>Event Type</h2>
+                    <p>{{ request.eventType }}</p>
+                </div> 
+                </br>
+                </br>
+                <div class="field">
                     <h2 class="statusTitle">Status</h2>
                     <!-- <p><span :class="request.status">{{request.status}}</span></p> -->
                     <StatusBadge :customClass="request.status">{{ request.status }}</StatusBadge>
