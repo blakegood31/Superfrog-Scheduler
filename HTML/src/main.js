@@ -2,8 +2,9 @@ import { createApp } from 'vue'
 //import '../dist/style.css'
 import App from './App.vue'
 import router from './router';
-import { useStore } from './store';
-import { createPinia } from 'pinia';
+import {store} from './router';
+//import { useStore } from 'vuex';
+import { createStore } from 'vuex';
 import { useRouter } from 'vue-router'
 import ElementPlus from 'element-plus'
 import RequestPage1 from './views/RequestPage1.vue';
@@ -17,13 +18,14 @@ import EditRequestDetails from './views/EditRequestDetails.vue';
 import ViewRequest from './views/ViewRequest.vue';
 import CustomerLanding from './views/CustomerLanding.vue';
 
-const pinia = createPinia();
-const store = useStore();
+
+
+
 
 createApp(App)
     .use(ElementPlus)
     .use(router)
-    .use(pinia)
+    .use(store)
     //register components
     .component('RequestPage1', RequestPage1)
     .component('RequestPage2', RequestPage2)

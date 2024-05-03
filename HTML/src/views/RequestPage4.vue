@@ -1,23 +1,32 @@
 <template>
   <div>
+
     <!-- progress bar -->
     <Progressbar />
 
     <div>
       <div>
-        <!--all previously submitted info listed here to review-->
+        <!--all previously submtted info listed here to review-->
         <h1>Review Your Order</h1>
 
         <!--selected date & time of the event-->
         <div>
           <h3>Selected Date & Time</h3>
           <!--table w specific time information-->
+          <!--TO DO: add time info from input-->
           <table>
             <tr>
               <th>Date</th>
-              <td>{{ store.requestData.selectedDate }}</td>
+              <td>08/31/2022</td>
             </tr>
-            <!-- You can add time here if you capture it -->
+            <tr>
+              <th>Start Time</th>
+              <td>9am</td>
+            </tr>
+            <tr>
+              <th>End Time</th>
+              <td>1pm</td>
+            </tr>
           </table>
         </div>
 
@@ -25,18 +34,19 @@
         <div>
           <h2>Personal Contact Information</h2>
           <!--table w specific contact info-->
+          <!--TO DO: add specific contact info from input-->
           <table>
             <tr>
               <th>Name</th>
-              <td>{{ store.requestData.fname }} {{ store.requestData.lname }}</td>
+              <td>John Doe</td>
             </tr>
             <tr>
               <th>Phone</th>
-              <td>{{ store.requestData.pnumber }}</td>
+              <td>(817)257-1234</td>
             </tr>
             <tr>
               <th>Email</th>
-              <td>{{ store.requestData.email }}</td>
+              <td>johndoe@gmail.com</td>
             </tr>
           </table>
         </div>
@@ -45,34 +55,35 @@
         <div>
           <h2>Event Information</h2>
           <!--table w specific event information-->
+          <!--TO DO: add specific event info from input-->
           <table>
             <tr>
               <th>Event Name</th>
-              <td>{{ store.requestData.etitle }}</td>
+              <td>John's Graduation Party</td>
             </tr>
             <tr>
               <th>Organization</th>
-              <td>{{ store.requestData.orgname }}</td>
+              <td></td>
             </tr>
             <tr>
               <th>Event Location</th>
-              <td>{{ store.requestData.address }}</td>
+              <td></td>
             </tr>
             <tr>
               <th>Event Type</th>
-              <td>{{ store.requestData.eventType }}</td>
+              <td>Private/Residential</td>
             </tr>
             <tr>
               <th>Any expenses or benefits to the spirit team members</th>
-              <td>{{ store.requestData.benefits }}</td>
+                <td></td>
             </tr>
             <tr>
               <th>Outside organizations</th>
-              <td>{{ store.requestData.outorgs }}</td>
+              <td></td>
             </tr>
             <tr>
               <th>Description of Event</th>
-              <td>{{ store.requestData.description }}</td>
+              <td></td>
             </tr>
           </table>
         </div>
@@ -99,36 +110,27 @@
     <button @click="goToPage3">Back</button>
 
     <!-- Move forward to page 5 -->
-    <button @click="submitRequest">Submit</button>
+    <button @click="goToPage5">Submit</button>
   </div>
 </template>
 
 <script setup>
 import Progressbar from '../components/progressbar.vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from 'pinia';
-
+        
 const router = useRouter();
-const store = useStore();
+const selectedDate = ref('');
 
 const goToPage3 = () => {
   // go to page 3
   router.push('/page3');
 };
 
-const submitRequest = async () => {
-  // Update the request status to 'Pending'
-  store.updateRequestData({ status: 'Pending' });
-
-  // Send the request data to the backend
-  try {
-    await store.sendRequestData();
-    // Redirect to the confirmation page
-    router.push('/page5');
-  } catch (error) {
-    // Handle any errors
-    console.error('Failed to submit request:', error);
-    // Optionally, display an error message to the user
-  }
+//TO DO: add any validations to move on
+const goToPage5 = () => {
+  // go to page 5
+  router.push('/page5');
 };
 </script>
+
