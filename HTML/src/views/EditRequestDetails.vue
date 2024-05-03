@@ -37,7 +37,7 @@
                 <div class="field">
                     <h2>Involved Organizations</h2>
                     <input type="text" v-model="editedRequest.other_orgs" @input="resizeInput('other-orgs')" @focus="resizeInput('other-orgs')" id="other-orgs">
-                </div> 
+                </div>
                 <div class="field">
                     <h2>Distance from TCU</h2>
                     <p><input type="text" v-model="editedRequest.milesFromTCU" @input="resizeInput('distance')" @focus="resizeInput('distance')" id="distance"> miles</p>
@@ -48,11 +48,15 @@
                     <input type="text" v-model="editedRequest.eventType" @input="resizeInput('eventType')" @focus="resizeInput('eventType')" id="eventType">
                 </div>
 
-                <div class="field">
-                    <h2 class="statusTitle">Status</h2>
-                    <StatusBadge :customClass="editedRequest.status">{{ editedRequest.status }}</StatusBadge>
-                    <button @click="markAsIncomplete(editedRequest.id)">Mark as Incomplete</button>
-                </div>
+              <div class="field">
+                <h2 class="statusTitle">Status</h2>
+                <StatusBadge :customClass="editedRequest.status">{{ editedRequest.status }}</StatusBadge>
+                <!-- Conditionally render the Mark as Incomplete button -->
+                <button v-if="editedRequest.status !== 'PENDING'" @click="markAsIncomplete(editedRequest.id)">Mark as Incomplete</button>
+                <!-- New buttons for accepting and rejecting the request -->
+                <button v-if="editedRequest.status === 'PENDING'" @click="acceptRequest(editedRequest.id)">Accept Request</button>
+                <button v-if="editedRequest.status === 'PENDING'" @click="rejectRequest(editedRequest.id)">Reject Request</button>
+              </div>
                 <div class="field" v-if="isApproved && isAdmin">
                     <h2>Assigned Student</h2>
                     <select v-model="editedRequest.superfrog">
@@ -70,7 +74,7 @@
                     <button @click="undoChanges">Undo Changes</button>
                     <button v-if="isApproved" @click="cancelRequest">Cancel Request</button>
                 </div>
-            </div> 
+            </div>
         </Sidebar>
     </div>
 </template>
@@ -100,13 +104,20 @@
     secondClick.value = false;
     cancelReason.value = "";
 
+    const acceptRequest = (id) => {
+      editedRequest.value.status = 'APPROVED';
+      saveChanges(); // Optionally, call saveChanges directly if you want to persist the change immediately
+    };
+
+    const rejectRequest = (id) => {
+      editedRequest.value.status = 'REJECTED';
+      saveChanges(); // Optionally, add logic to handle specific tasks after rejection, like sending a notification
+    };
 
     const markAsIncomplete = (id) => {
       editedRequest.value.status = 'INCOMPLETE';
       saveChanges(); // Optionally, call saveChanges directly if you want to persist the change immediately
     };
-
-
 
 
 
@@ -272,7 +283,7 @@
                         console.log(cancelReason.value);
                         localStorage.setItem('requestToEdit', JSON.stringify(data.data));
                         editedRequest.value = JSON.parse(localStorage.getItem('requestToEdit'));
-                        oldRequest.value =JSON.parse(localStorage.getItem('requestToEdit')); 
+                        oldRequest.value =JSON.parse(localStorage.getItem('requestToEdit'));
                         isApproved.value = false;
                     });
                 secondClick.value = false;
@@ -283,11 +294,11 @@
                 alert("Request not canceled.")
                 showCancelTextbox.value = false;
                 secondClick.value = false;
-            } 
+            }
         }
         else{
             secondClick.value = true;
-        }    
+        }
     };
 
     const resizeInput = (eltName) => {
@@ -337,14 +348,14 @@
     }
 
     .field > input:focus {
-        outline-style:none; 
+        outline-style:none;
         border-color: #832cc9;
         border-width: 3px;
         border-radius: 5px;
     }
 
     .field > p > input:focus {
-        outline-style:none; 
+        outline-style:none;
         border-color: #832cc9;
         border-width: 3px;
         border-radius: 5px;
