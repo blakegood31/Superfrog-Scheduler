@@ -5,8 +5,6 @@
             <div class="main-content">
                 <AdminHeader />
                 <button v-if="canEditSuperfrog" @click="editSuperfrogProfile" class="editsf">Edit Superfrog Profile</button>
-
-
                 <h2 class="pageTitle"> All Superfrog Requests</h2>
 
                 <!-- <button id="showFieldsGridButton" @click="showFieldSelections"><img id="filterIcon" src="HTML/src/assets/funnel.png"></button> -->
@@ -81,9 +79,6 @@
                             <span>
                                 <button v-if="request.status === 'PENDING'">Approve</button>
                             </span>
-                            <span>
-                                <button v-if="canEdit && ['APPROVED', 'ASSIGNED'].includes(request.status)" @click="markAsIncomplete(request.id)">Mark as Incomplete</button>
-                            </span>
                         </td>
                     </tr>
                 </table>
@@ -97,8 +92,6 @@
     import AdminHeader from '../components/adminHeader.vue';
     import StatusBadge from '../components/statusBadge.vue';
     import Sidebar from '../components/Sidebar.vue';
-
-
 
     const router = useRouter();
 
@@ -300,33 +293,6 @@
             console.error('Error: ', error);
         });
     };
-    const markAsIncomplete = (requestId) => {
-      const jwt = localStorage.getItem('userToken');
-      fetch(`http://localhost:8081/requests/${requestId}/incomplete`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${jwt}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ status: 'INCOMPLETE' })
-      }).then(response => {
-        if (response.ok) {
-          console.log("Request marked as incomplete");
-          // Find the request in the allRequests array and update its status
-          const request = allRequests.value.find(r => r.id === requestId);
-          if (request) {
-            request.status = 'INCOMPLETE';
-          }
-          // Optionally, force a refresh of the component or table if it doesn't update automatically
-        } else {
-          throw new Error("Failed to update status");
-        }
-      }).catch(error => {
-        console.error('Error updating status:', error);
-      });
-    };
-
-
 
     const viewApprovedRequests = () => {
         const jwt = localStorage.getItem('userToken');

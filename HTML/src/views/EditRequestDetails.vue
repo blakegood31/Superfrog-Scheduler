@@ -51,6 +51,7 @@
                 <div class="field">
                     <h2 class="statusTitle">Status</h2>
                     <StatusBadge :customClass="editedRequest.status">{{ editedRequest.status }}</StatusBadge>
+                    <button @click="markAsIncomplete(editedRequest.id)">Mark as Incomplete</button>
                 </div>
                 <div class="field" v-if="isApproved && isAdmin">
                     <h2>Assigned Student</h2>
@@ -98,6 +99,17 @@
     showCancelTextbox.value = false;
     secondClick.value = false;
     cancelReason.value = "";
+
+
+    const markAsIncomplete = (id) => {
+      editedRequest.value.status = 'INCOMPLETE';
+      saveChanges(); // Optionally, call saveChanges directly if you want to persist the change immediately
+    };
+
+
+
+
+
 
     if(userInfo.value.roles.split(' ').includes("admin")){
         const jwt = localStorage.getItem('userToken');
