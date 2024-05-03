@@ -4,8 +4,12 @@
         <Sidebar>
             <div class="main-content">
                 <AdminHeader />
+                <button v-if="canEditSuperfrog" @click="editSuperfrogProfile" class="editsf">Edit Superfrog Profile</button>
+
+
                 <h2 class="pageTitle"> All Superfrog Requests</h2>
-                <button id="showFieldsGridButton" @click="showFieldSelections"><img id="filterIcon" src="/Users/blake/School/WebTech/Superfrog-Scheduler/HTML/src/assets/funnel.png"></button>
+
+                <!-- <button id="showFieldsGridButton" @click="showFieldSelections"><img id="filterIcon" src="HTML/src/assets/funnel.png"></button> -->
                 <div class="hidden" id="showFieldGrid">
                     <label for="checkbox1">
                         <input type="checkbox" id="checkbox1" v-model="showColumns.eventTitle"> Event Title
@@ -77,6 +81,9 @@
                             <span>
                                 <button v-if="request.status === 'PENDING'">Approve</button>
                             </span>
+                            <span>
+                                <button v-if="canEdit && ['APPROVED', 'ASSIGNED'].includes(request.status)" @click="markAsIncomplete(request.id)">Mark as Incomplete</button>
+                            </span>
                         </td>
                     </tr>
                 </table>
@@ -89,7 +96,8 @@
     import { useRouter } from 'vue-router';
     import AdminHeader from '../components/adminHeader.vue';
     import StatusBadge from '../components/statusBadge.vue';
-    import Sidebar from '../components/Sidebar.vue'; 
+    import Sidebar from '../components/Sidebar.vue';
+
 
 
     const router = useRouter();
@@ -98,6 +106,7 @@
     const showTable = defineModel('showTable');
     const canEdit = defineModel('canEdit');
     const canView = defineModel('canView');
+    const canEditSuperfrog = defineModel('canEditSuperfrog');
     const showColumns = defineModel('showColumns');
 
     showTable.value = false;
@@ -177,10 +186,18 @@
     }).catch(error => {
         console.error('Error: ', error);
     });
+    if(JSON.parse(localStorage.getItem('userInfo')).roles.split(' ').includes("superfrog")){
+      canEditSuperfrog.value = true;
+    }
+    else{
+      canEditSuperfrog.value = false;
+    }
 
-    // If user is admin, show the button to edit requests
+
+    // If user is admin, show the button to edit requests/mark incompletete
     if(JSON.parse(localStorage.getItem('userInfo')).roles.split(' ').includes("admin")){
         canEdit.value = true;
+
     }
     else{
         canEdit.value = false;
@@ -250,6 +267,11 @@
         });
     };
 
+    const editSuperfrogProfile = (requestID) => {
+        router.push('/EditSuperfrogProfile')
+    }
+
+
     const viewRequest = (requestId) => {
         const userRoles = JSON.parse(localStorage.getItem('userInfo')).roles.split(' ');
         const jwt = localStorage.getItem('userToken');
@@ -278,6 +300,33 @@
             console.error('Error: ', error);
         });
     };
+    const markAsIncomplete = (requestId) => {
+      const jwt = localStorage.getItem('userToken');
+      fetch(`http://localhost:8081/requests/${requestId}/incomplete`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${jwt}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: 'INCOMPLETE' })
+      }).then(response => {
+        if (response.ok) {
+          console.log("Request marked as incomplete");
+          // Find the request in the allRequests array and update its status
+          const request = allRequests.value.find(r => r.id === requestId);
+          if (request) {
+            request.status = 'INCOMPLETE';
+          }
+          // Optionally, force a refresh of the component or table if it doesn't update automatically
+        } else {
+          throw new Error("Failed to update status");
+        }
+      }).catch(error => {
+        console.error('Error updating status:', error);
+      });
+    };
+
+
 
     const viewApprovedRequests = () => {
         const jwt = localStorage.getItem('userToken');
@@ -329,6 +378,12 @@
     #showFieldsGridButton:active {
         box-shadow: none;
     }
+    .editsf{
+      margin: 2%;
+      padding: 1%;
+      font-size: 100%;
+      width: 20%;
+    }
 
     #showFieldButton {
         display: flex;
@@ -345,7 +400,6 @@
         border-bottom: 2px solid #531e7e;
         text-align: center;
     }
-
     .hidden {
         display: none;
     }

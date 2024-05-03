@@ -12,6 +12,7 @@ import SignInPage from '../views/SignInPage.vue';
 import AdminLanding from '../views/AdminLanding.vue';
 import EditRequestDetails from '../views/EditRequestDetails.vue';
 import ViewRequest from '../views/ViewRequest.vue';
+import EditSuperfrogProfile from "@/views/EditSuperfrogProfile.vue";
 
 //create the router instance
 const router = createRouter({
@@ -22,6 +23,7 @@ const router = createRouter({
         { path: '/login', component: SignInPage},
         { path: '/admin', component: AdminLanding},
         { path: '/editRequest', component: EditRequestDetails},
+        { path: '/editSuperfrogProfile', component: EditSuperfrogProfile},
         { path: '/viewRequest', component: ViewRequest},
         { path: '/customer', component: CustomerLanding},
         { path: '/page1', component: RequestPage1 },

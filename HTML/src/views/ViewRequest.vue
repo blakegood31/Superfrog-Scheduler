@@ -12,51 +12,35 @@
                     <h2>Event Title</h2>
                     <p>{{ request.eventTitle }}</p>
                 </div>
-                </br>
-                </br>
                 <div class="field">
                     <h2>Event Location</h2>
                     <p>{{ request.address }}</p>
                 </div>
-                </br>
-                </br>
                 <div class="field">
                     <h2>Date & Time</h2>
                     <p> Start: {{request.startTime}}</p>
                     <p> End: {{request.endTime}}</p>
                 </div>
-                </br>
-                </br>
                 <div class="field">
                     <h2>Event Description</h2>
                     <p> {{ request.description }}</p>
                 </div>
-                </br>
-                </br>
                 <div class="field">
                     <h2>Special Instructions</h2>
                     <p>{{ request.specialInstructions }}</p>
                 </div>
-                </br>
-                </br> 
                 <div class="field">
                     <h2>Involved Organizations</h2>
                     <p>{{ request.other_orgs }}</p>
-                </div> 
-                </br>
-                </br>
+                </div>
                 <div class="field">
                     <h2>Distance from TCU</h2>
                     <p>{{ request.milesFromTCU }} miles</p>
-                </div> 
-                </br>
-                </br>
+                </div>
                 <div class="field">
                     <h2>Event Type</h2>
                     <p>{{ request.eventType }}</p>
-                </div> 
-                </br>
-                </br>
+                </div>
                 <div class="field">
                     <h2 class="statusTitle">Status</h2>
                     <!-- <p><span :class="request.status">{{request.status}}</span></p> -->
