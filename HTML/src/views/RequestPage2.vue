@@ -14,7 +14,20 @@
         <h3>Selected Date & Time</h3>
         <!--table w specific time information-->
         <!--TO DO: add specific time info from input-->
-        <p>{{ selectedDate }}</p>
+        <table>
+            <tr>
+                <th>Date</th>
+                <td>08/31/2022</td>
+            </tr>
+            <tr>
+                <th>Start Time</th>
+                <td>9am</td>
+            </tr>
+            <tr>
+                <th>End Time</th>
+                <td>1pm</td>
+            </tr>
+        </table>
     </div>
 
     <!--event type drop down selection-->
@@ -44,7 +57,7 @@
         <label for="pnumber">Phone Number<br></label>
         <input type="text" id="pnumber" name="pnumber"> 
 
-        <!--email-->
+        <!--last name name-->
         <label for="email">Email<br></label>
         <input type="text" id="email" name="email"><br>
     </div>
@@ -86,38 +99,23 @@
     </template>
     
     <script setup>
-    import Progressbar from '../components/progressbar.vue';
-    import { useRouter } from 'vue-router';
-    import { useStore } from 'pinia';
+        import Progressbar from '../components/progressbar.vue';
+        import { ref } from 'vue';
+        import { useRouter } from 'vue-router';
+        
+        const router = useRouter();
 
-    const router = useRouter();
-    const store = useStore();
+        //TO DO: validate moving on to next page 
 
-    //pull data from prev page for printed table
-    const selectedDate = store.state.requestData.selectedDate;
+        const goToPage1 = () => {
+            // go to page 1
+            router.push('/page1');
+        };
 
-    const goToPage1 = () => {
-        // go to page 1
-        router.push('/page1');
-    };
-
-    const goToPage3 = () => {
-        // Save the input data to the store
-        store.commit('updateRequestData', {
-            // Update requestData with inputs from this page
-            eventType: 'event type',
-            fname: 'first name',
-            lname: 'last name',
-            pnumber: 'phone number',
-            email: 'email address',
-            etitle: 'event title',
-            orgname: 'organization name',
-            address: 'address',
-            description: 'event description',
-            instructions: 'special instructions',
-            outorgs: 'outside orgs',
-            benefits: 'expenses & benefits'
-        });
-        router.push('/page3');
-    };
-</script>
+        const goToPage3 = () => {
+            // go to page 3 
+            router.push('/page3');
+        };
+    </script>
+    
+    
