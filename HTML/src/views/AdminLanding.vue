@@ -47,7 +47,7 @@
     import { useRouter } from 'vue-router';
     import AdminHeader from '../components/adminHeader.vue';
     import StatusBadge from '../components/statusBadge.vue';
-    import Sidebar from '../components/Sidebar.vue'; 
+    import Sidebar from '../components/Sidebar.vue';
 
     const router = useRouter();
 

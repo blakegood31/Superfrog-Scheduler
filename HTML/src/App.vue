@@ -20,6 +20,7 @@ import RequestPage5 from './views/RequestPage5.vue';
   </div>
 </template>
 <style>
+@import url('https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css');
   * {
     margin: 0;
   }
