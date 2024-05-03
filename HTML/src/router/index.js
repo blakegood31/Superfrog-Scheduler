@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import {createStore } from 'vuex';
+import { createPinia } from 'pinia';
+
+const pinia = createPinia();
 
 //import route components
 import CustomerLanding from '../views/CustomerLanding.vue';
@@ -33,7 +35,7 @@ const router = createRouter({
 });
 
 // create the store
-const store = createStore({
+const store = pinia.state({
     state () {
         return{
             count: 0,
@@ -53,25 +55,25 @@ const store = createStore({
 
 
 
-// use vuex store to help save input data across all request pages
+// use pinia to help save input data across all request pages
 // before moving on to next page, save inputs from current page
 router.beforeEach((to, from, next) => {
-    // Update the form data in the store based on the current route
+    const store = useStore();
     switch (to.path) {
         case '/page1':
-            store.commit('updateRequestData', { selectedDate: '2099-01-01' }); 
+            store.updateRequestData({ selectedDate: '2099-01-01' });
             break;
         case '/page2':
-            store.commit('updateRequestData', { description: '' });
+            store.updateRequestData({ description: '' });
             break;
         case '/page3':
-            store.commit('updateRequestData', { description: '' });
+            store.updateRequestData({ description: '' });
             break;
         case '/page4':
-            store.commit('updateRequestData', { description: '' });
+            store.updateRequestData({ description: '' });
             break;
         case '/page5':
-            store.commit('updateRequestData', { description: '' });
+            store.updateRequestData({ description: '' });
             break;
         default:
             break;
