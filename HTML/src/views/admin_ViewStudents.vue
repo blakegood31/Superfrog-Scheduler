@@ -21,14 +21,15 @@
                 <tbody>
                     <tr v-for="(student, index) in displayedStudents" :key="student.id">
                         <td>{{ student.id }}</td>
-                        <td>{{ student.first_name }}</td>
-                        <td>{{ student.last_name }}</td>
+                        <td>{{ student.firstName }}</td>
+                        <td>{{ student.lastName }}</td>
                         <td>{{ student.email }}</td>
                         <td>{{ student.active ? "Enabled" : "Disabled" }}</td>
                         <td>
                             <button @click="toggleStudentStatus(student)">
                                 {{ student.active ? "Disable" : "Enable" }}
                             </button>
+                            <button @click="viewDetails(student.id)">View Details</button>
                         </td>
                     </tr>
                 </tbody>
@@ -99,6 +100,32 @@ export default {
         })
         .catch(error => {
             console.log(error);
+        });
+    },
+    viewDetails(studentid){
+        const token = localStorage.getItem('token');
+        const url = `http://localhost:8081/students/${studentid}`;
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        }).then(response => {
+            if (response.ok) {
+                console.log("Successful Token Usage");
+                return response.json();
+            } else {
+                console.log("Token Usage Unsuccessful");
+                console.log(response);
+                throw new Error("Token usage failed");
+            }
+        }).then(data => {
+            console.log(data);
+            localStorage.setItem('studentToView', JSON.stringify(data)); // Store the student data for later use
+            this.$router.push('/viewStudentDetails'); 
+        }).catch(error => {
+            console.error('Error: ', error);
         });
     },
     prevPage() {
