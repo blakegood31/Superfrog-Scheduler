@@ -10,6 +10,7 @@ import EditRequestDetails from '../views/EditRequestDetails.vue';
 import ViewRequest from '../views/ViewRequest.vue';
 import EditSuperfrogProfile from "@/views/EditSuperfrogProfile.vue";
 import RequestConfirmation from '../views/RequestConfirmation.vue';
+import admin_ViewStudents from '../views/admin_ViewStudents.vue';
 
 //create the router instance
 const router = createRouter({
@@ -26,7 +27,7 @@ const router = createRouter({
         { path: '/custrequest', component: CustRequestPage },
         { path: '/editcustrequest', component: CustEditRequestDetails },
         { path: '/requestconfirmation', component: RequestConfirmation},
-        { path: '/admin_ViewStudents', component: ViewStudents},
+        { path: '/admin_ViewStudents', component: admin_ViewStudents},
     ]
 });
 
