@@ -1,93 +1,114 @@
 <template>
-    <div id="app">
-        <Sidebar>
-            <div class="container" id="app">
-                <!-- Title -->
-                <!-- <div class="header">
-                    <div class="title">Admin Portal</div>
-                    <div class="description">Test Page For User Authentication -- Admin & SF Student</div>
-                </div> -->
-                <AdminHeader/>
-                <div class="field">
-                    <h2>Event Title</h2>
-                    <p>{{ request.eventTitle }}</p>
-                </div>
-                </br>
-                </br>
-                <div class="field">
-                    <h2>Event Location</h2>
-                    <p>{{ request.address }}</p>
-                </div>
-                </br>
-                </br>
-                <div class="field">
-                    <h2>Date & Time</h2>
-                    <p> Start: {{request.startTime}}</p>
-                    <p> End: {{request.endTime}}</p>
-                </div>
-                </br>
-                </br>
-                <div class="field">
-                    <h2>Event Description</h2>
-                    <p> {{ request.description }}</p>
-                </div>
-                </br>
-                </br>
-                <div class="field">
-                    <h2>Special Instructions</h2>
-                    <p>{{ request.specialInstructions }}</p>
-                </div>
-                </br>
-                </br> 
-                <div class="field">
-                    <h2>Involved Organizations</h2>
-                    <p>{{ request.other_orgs }}</p>
-                </div> 
-                </br>
-                </br>
-                <div class="field">
-                    <h2>Distance from TCU</h2>
-                    <p>{{ request.milesFromTCU }} miles</p>
-                </div> 
-                </br>
-                </br>
-                <div class="field">
-                    <h2>Event Type</h2>
-                    <p>{{ request.eventType }}</p>
-                </div> 
-                </br>
-                </br>
-                <div class="field">
-                    <h2 class="statusTitle">Status</h2>
-                    <!-- <p><span :class="request.status">{{request.status}}</span></p> -->
-                    <StatusBadge :customClass="request.status">{{ request.status }}</StatusBadge>
-                </div>
-                <div class="field">
-                    <h2>Assigned Student</h2>
-                    <p>{{ request.superfrog ? request.superfrog.firstName + ' ' + request.superfrog.lastName : 'Unassigned' }}</p>
-                </div>   
-                <div>
-                    <button @click="backToAll">Back to All Requests</button>
-                </div>
-            </div> 
-        </Sidebar>
-    </div>
- 
+  <div id="app">
+    <Sidebar>
+      <div class="container" id="app">
+        <!-- Title -->
+        <!-- <div class="header">
+            <div class="title">Admin Portal</div>
+            <div class="description">Test Page For User Authentication -- Admin & SF Student</div>
+        </div> -->
+        <AdminHeader/>
+        <div class="field">
+          <h2>Event Title</h2>
+          <p>{{ request.eventTitle }}</p>
+        </div>
+        <div class="field">
+          <h2>Event Location</h2>
+          <p>{{ request.address }}</p>
+        </div>
+        <div class="field">
+          <h2>Date & Time</h2>
+          <p> Start: {{request.startTime}}</p>
+          <p> End: {{request.endTime}}</p>
+        </div>
+        <div class="field">
+          <h2>Event Description</h2>
+          <p> {{ request.description }}</p>
+        </div>
+        <div class="field">
+          <h2>Special Instructions</h2>
+          <p>{{ request.specialInstructions }}</p>
+        </div>
+        <div class="field">
+          <h2>Involved Organizations</h2>
+          <p>{{ request.other_orgs }}</p>
+        </div>
+        <div class="field">
+          <h2>Distance from TCU</h2>
+          <p>{{ request.milesFromTCU }} miles</p>
+        </div>
+        <div class="field">
+          <h2>Event Type</h2>
+          <p>{{ request.eventType }}</p>
+        </div>
+        <div class="field">
+          <h2 class="statusTitle">Status</h2>
+          <!-- <p><span :class="request.status">{{request.status}}</span></p> -->
+          <StatusBadge :customClass="request.status">{{ request.status }}</StatusBadge>
+          <button v-if="(request.status === 'INCOMPLETE' || request.status === 'ASSIGNED')" @click="markAsCompleted(request.id)">Mark as Completed</button>
+
+        </div>
+        <div class="field">
+          <h2>Assigned Student</h2>
+          <p>{{ request.superfrog ? request.superfrog.firstName + ' ' + request.superfrog.lastName : 'Unassigned' }}</p>
+        </div>
+        <div>
+          <button @click="backToAll">Back to All Requests</button>
+        </div>
+      </div>
+    </Sidebar>
+  </div>
+
 </template>
 <script setup>
-    import AdminHeader from '../components/adminHeader.vue';
-    import { useRouter } from 'vue-router';
-    import StatusBadge from '../components/statusBadge.vue';
-    import Sidebar from '../components/Sidebar.vue';
-    const router = useRouter();
-    const request = defineModel('request');
+import { ref } from 'vue';
+import AdminHeader from '../components/adminHeader.vue';
+import Sidebar from '../components/Sidebar.vue';
+import StatusBadge from '../components/statusBadge.vue';
+import { useRouter } from 'vue-router';
 
-    request.value = JSON.parse(localStorage.getItem('requestToView'));
+const router = useRouter();
+const request = ref(JSON.parse(localStorage.getItem('requestToView') || '{}'));
 
-    const backToAll = () => {
-        router.push('/admin');
+const markAsCompleted = async (id) => {
+  request.value.status = 'COMPLETED';
+  // Add a confirmation dialog
+  if (confirm("Are you sure you want to mark this request as completed?")) {
+    await saveChanges(id, request.value.status);
+  } else {
+    console.log('Update canceled by user');
+  }
+};
+
+const saveChanges = async (id, status) => {
+  const apiURL = `http://127.0.0.1:8081/requests/${id}/status/${status}`;
+  const response = await fetch(apiURL, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('userToken')
     }
+  });
+
+
+  if (response.ok) {
+    const updatedRequest = await response.json();
+    localStorage.setItem('requestToView', JSON.stringify(updatedRequest));
+    console.log('Update successful:', updatedRequest);
+  } else {
+    console.error('Failed to update:', await response.text());
+  }
+};
+
+
+
+
+const backToAll = () => {
+  router.push('/admin');
+};
 </script>
+
+
 <style scoped>
     .container{
         height: 100vh;
@@ -125,7 +146,7 @@
     }
 
     .field > input:focus {
-        outline-style:none; 
+        outline-style:none;
         border-color: #832cc9;
         border-width: 3px;
         border-radius: 5px;

@@ -132,6 +132,9 @@
   .sidebar a {
     text-decoration: none;
     font-size: 150%;
+    color: white;
+    -webkit-text-fill-color: white;
+    font-weight: bold;
     color: inherit;
     display: flex;
     justify-content: flex-start;

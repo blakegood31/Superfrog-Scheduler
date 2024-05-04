@@ -4,8 +4,10 @@
         <Sidebar>
             <div class="main-content">
                 <AdminHeader />
+                <button v-if="canEditSuperfrog" @click="editSuperfrogProfile" class="editsf">Edit Superfrog Profile</button>
                 <h2 class="pageTitle"> All Superfrog Requests</h2>
-                <button id="showFieldsGridButton" @click="showFieldSelections"><img id="filterIcon" src="/Users/blake/School/WebTech/Superfrog-Scheduler/HTML/src/assets/funnel.png"></button>
+
+                <button id="showFieldsGridButton" @click="showFieldSelections"><img id="filterIcon" src="../assets/funnel.png"></button>
                 <div class="hidden" id="showFieldGrid">
                     <label for="checkbox1">
                         <input type="checkbox" id="checkbox1" v-model="showColumns.eventTitle"> Event Title
@@ -99,6 +101,7 @@
     const showTable = defineModel('showTable');
     const canEdit = defineModel('canEdit');
     const canView = defineModel('canView');
+    const canEditSuperfrog = defineModel('canEditSuperfrog');
     const showColumns = defineModel('showColumns');
     const showStatus = defineModel('showStatus');
 
@@ -144,10 +147,18 @@
     }).catch(error => {
         console.error('Error: ', error);
     });
+    if(JSON.parse(localStorage.getItem('userInfo')).roles.split(' ').includes("superfrog")){
+      canEditSuperfrog.value = true;
+    }
+    else{
+      canEditSuperfrog.value = false;
+    }
 
-    // If user is admin, show the button to edit requests
+
+    // If user is admin, show the button to edit requests/mark incompletete
     if(JSON.parse(localStorage.getItem('userInfo')).roles.split(' ').includes("admin")){
         canEdit.value = true;
+
     }
     else{
         canEdit.value = false;
@@ -262,6 +273,10 @@
         });
     };
 
+    const editSuperfrogProfile = (requestID) => {
+        router.push('/EditSuperfrogProfile')
+    }
+
     // Button to take user to "view request" page (no editing)
     const viewRequest = (requestId) => {
         const userRoles = JSON.parse(localStorage.getItem('userInfo')).roles.split(' ');
@@ -317,6 +332,12 @@
     #showFieldsGridButton:active {
         box-shadow: none;
     }
+    .editsf{
+      margin: 2%;
+      padding: 1%;
+      font-size: 100%;
+      width: 20%;
+    }
 
     #showFieldButton {
         display: flex;
@@ -333,7 +354,6 @@
         border-bottom: 2px solid #531e7e;
         text-align: center;
     }
-
     .hidden {
         display: none;
     }
