@@ -25,7 +25,8 @@ const router = createRouter({
         { path: '/customer', component: CustomerLanding},
         { path: '/custrequest', component: CustRequestPage },
         { path: '/editcustrequest', component: CustEditRequestDetails },
-        { path: '/requestconfirmation', component: RequestConfirmation}
+        { path: '/requestconfirmation', component: RequestConfirmation},
+        { path: '/admin_ViewStudents', component: ViewStudents},
     ]
 });
 
