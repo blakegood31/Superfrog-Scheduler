@@ -48,6 +48,11 @@
           <button v-if="(request.status === 'INCOMPLETE' || request.status === 'ASSIGNED')" @click="markAsCompleted(request.id)">Mark as Completed</button>
 
         </div>
+        <!-- Approve and Reject Buttons -->
+        <div class="options">
+          <button v-if="request.status === 'PENDING'" @click="approveRequest(request.id)">Approve</button>
+          <button v-if="request.status === 'PENDING'" @click="rejectRequest(request.id)">Reject</button>
+        </div>
         <div class="field">
           <h2>Assigned Student</h2>
           <p>{{ request.superfrog ? request.superfrog.firstName + ' ' + request.superfrog.lastName : 'Unassigned' }}</p>
@@ -100,7 +105,31 @@ const saveChanges = async (id, status) => {
   }
 };
 
+const updateRequestStatus = async (id, status) => {
+  const apiURL = `http://127.0.0.1:8081/requests/${id}/status/${status}`;
+  const response = await fetch(apiURL, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('userToken')
+    }
+  });
 
+  if (response.ok) {
+    const updatedRequest = await response.json();
+    localStorage.setItem('requestToView', JSON.stringify(updatedRequest));
+    console.log('Update successful:', updatedRequest);
+    // if (status === 'Approved') {
+    //   addToCalendar(request.value); // Assuming addToCalendar is an implemented method
+    // }
+    request.value.status = status; // Update local status
+  } else {
+    console.error('Failed to update:', await response.text());
+  }
+};
+
+const approveRequest = (id) => updateRequestStatus(id, 'APPROVED');
+const rejectRequest = (id) => updateRequestStatus(id, 'REJECTED');
 
 
 const backToAll = () => {
