@@ -148,7 +148,7 @@
 
     const goToLanding = () => {
         // go to customer landing page
-        router.push('/customer');
+        router.push('/admin');
     };
 
     const goToConfirm = () => {
@@ -158,7 +158,7 @@
         }*/
 
         //set status to PENDING
-        newRequest.value.status = "PENDING";
+        newRequest.value.status = "ASSIGNED";
 
         const options = {
             method: 'POST', 
@@ -186,7 +186,7 @@
             });
 
         //send to submit
-        router.push('/requestconfirmation');
+        router.push('/admin');
     };
 
     //validations
