@@ -52,17 +52,18 @@
                 <h2 class="statusTitle">Status</h2>
                 <StatusBadge :customClass="editedRequest.status">{{ editedRequest.status }}</StatusBadge>
                 <!-- Conditionally render the Mark as Incomplete button -->
-                <button v-if="editedRequest.status !== 'PENDING'" @click="markAsIncomplete(editedRequest.id)">Mark as Incomplete</button>
+                <button v-if="['ASSIGNED', 'COMPLETED'].includes(editedRequest.status) && isAfterEventEnd" @click="markAsIncomplete(editedRequest.id)">Mark Incomplete</button>
                 <!-- New buttons for accepting and rejecting the request -->
-                <button v-if="editedRequest.status === 'PENDING'" @click="acceptRequest(editedRequest.id)">Accept Request</button>
-                <button v-if="editedRequest.status === 'PENDING'" @click="rejectRequest(editedRequest.id)">Reject Request</button>
+                <button v-if="['PENDING', 'REJECTED'].includes(editedRequest.status)" @click="acceptRequest(editedRequest.id)">Approve Request</button>
+                <button v-if="['PENDING', 'APPROVED'].includes(editedRequest.status)" @click="rejectRequest(editedRequest.id)">Reject Request</button>
               </div>
-                <div class="field" v-if="isApproved && isAdmin">
+                <div class="field" v-if="isAdmin">
                     <h2>Assigned Student</h2>
-                    <select v-model="editedRequest.superfrog">
+                    <select v-if="isApproved && editedRequest.status !== 'PENDING'" v-model="editedRequest.superfrog">
                         <option value="null" :selected="editedRequest.superfrog === null">No Student Assigned</option>
                         <option v-for="student in students" :value="student" :selected="editedRequest.superfrog && editedRequest.superfrog.value === student.value">{{ student.firstName }} {{ student.lastName }}</option>
                     </select>
+                    <p v-else>{{ editedRequest.superfrog ? editedRequest.superfrog.firstName + ' ' + editedRequest.superfrog.lastName : 'Unassigned' }}</p>
                 </div>
 
                 <div id="cancel-reason">
@@ -95,6 +96,7 @@
     const cancelReason = defineModel('cancelReason');
     const students = defineModel('allStudents');
     const isAdmin = defineModel('isAdmin');
+    const isAfterEventEnd = defineModel('isAfterEventEnd');
 
     editedRequest.value = JSON.parse(localStorage.getItem('requestToEdit'));
     oldRequest.value = JSON.parse(localStorage.getItem('requestToEdit'));
@@ -104,26 +106,43 @@
     secondClick.value = false;
     cancelReason.value = "";
 
+    // Use this value to determine if request can be marked as incomplete
+    // Request can be marked as incomplete if current system time is after the end time of the event
+    const eventEnd = new Date(editedRequest.value.endTime);
+    const currentTime = new Date();
+    isAfterEventEnd.value = eventEnd < currentTime;
+    console.log(editedRequest.value.status);
+    console.log(isApproved.value);
+    console.log("Event End " + eventEnd);
+    console.log("Current Time " + currentTime);
+
+
     const acceptRequest = (id) => {
-      editedRequest.value.status = 'APPROVED';
-      saveChanges(); // Optionally, call saveChanges directly if you want to persist the change immediately
+        var result = confirm("Confirm: Approve this request?");
+        if(result){
+            editedRequest.value.status = 'APPROVED';
+            isApproved.value = true;
+            saveChanges(false); // Optionally, call saveChanges directly if you want to persist the change immediately
+        }
     };
 
     const rejectRequest = (id) => {
-      editedRequest.value.status = 'REJECTED';
-      saveChanges(); // Optionally, add logic to handle specific tasks after rejection, like sending a notification
+        var result = confirm("Confirm: Reject this request?");
+        if(result){
+            editedRequest.value.status = 'REJECTED';
+            isApproved.value = false;
+            saveChanges(false); // Optionally, call saveChanges directly if you want to persist the change immediately
+        }
     };
 
     const markAsIncomplete = (id) => {
-        var result = confirm("Confirm: Mark request as incomplete?\nOther changes made will also take effect");
+        var result = confirm("Confirm: Mark request as incomplete?");
         if(result){
             editedRequest.value.status = 'INCOMPLETE';
             isApproved.value = false;
             saveChanges(false); // Optionally, call saveChanges directly if you want to persist the change immediately
         }
     };
-
-
 
 
     if(userInfo.value.roles.split(' ').includes("admin")){
@@ -160,9 +179,16 @@
         router.push('/admin');
     }
 
-    const saveChanges = () => {
+    const saveChanges = (askUser = true) => {
         // If the user confirms they want to save changes
-        if(finalizeChanges("save")){
+        var shouldUpdate = false;
+        if(askUser){
+            shouldUpdate = finalizeChanges("save");
+        }
+        else{
+            shouldUpdate = true;
+        }
+        if(shouldUpdate){
             // Set new status to pending if a customer made the change
             if(userInfo.value.roles.split(' ').includes("customer")){
                 console.log("User is a customer!");
@@ -174,20 +200,13 @@
                 if (editedRequest.value.status === 'ASSIGNED'){
                     editedRequest.value.status = "APPROVED";
                 }
-                /* if(oldRequest.value.status === 'ASSIGNED'){
-                    console.log("Remove request from " + oldRequest.value.superfrog.id);
-                } */
                 console.log(editedRequest.value.superfrog);
             }
             // Make sure status is assigned if a student has been assigned to the request
             else{
-                if(editedRequest.value.status === "APPROVED"){
+                if(oldRequest.value.superfrog !== editedRequest.value.superfrog && editedRequest.value.status === "APPROVED"){
                     editedRequest.value.status = "ASSIGNED";
-                    //console.log("Add request to the newly assigned student")
                 }
-                /* else if(editedRequest.value.superfrog !== null && (editedRequest.value.superfrog.id !== oldRequest.value.superfrog.id)){
-                    console.log("Remove from old student and assign to new one");
-                } */
             }
             const options = {
                 method: 'PUT',
@@ -232,28 +251,6 @@
             alert("Changes not saved.")
             return false
         }
-    };
-
-    const getRequestById = () => {
-        const options = {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + localStorage.getItem('userToken')
-            }
-        };
-        const url = 'http://127.0.0.1:8081/requests/' + editedRequest.value.id;
-        fetch(url, options)
-            .then(response => {
-                if(response.ok){
-                    console.log(response);
-                    return response.json();
-                }
-                else{
-                    console.log("ERROR!");
-                }
-            }).then(data => {
-                console.log(data.data);
-            });
     };
 
     const cancelRequest = () => {
@@ -316,6 +313,7 @@
     }
 </script>
 <style scoped>
+
     .container{
         height: 100vh;
         border: none;
@@ -347,7 +345,7 @@
 
     .field:hover{
         /* border: 2px solid #832cc9; */
-        border-color:#832cc9;
+        /* border-color:#832cc9; */
         background-color: #f8f0ff;
     }
 
@@ -442,6 +440,18 @@
         border: 2px solid red;
         background-color: white;
         outline-style: none;
+    }
+
+    button {
+        margin-top: 10px;
+        border-radius: 5px;
+        border: 1px solid gray;
+        cursor: pointer;
+    }
+
+    button:hover {
+        outline: 1px solid #832cc9;
+        border-color: #832cc9;
     }
 
 </style>
