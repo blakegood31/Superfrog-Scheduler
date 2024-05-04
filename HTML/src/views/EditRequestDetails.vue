@@ -115,8 +115,12 @@
     };
 
     const markAsIncomplete = (id) => {
-      editedRequest.value.status = 'INCOMPLETE';
-      saveChanges(); // Optionally, call saveChanges directly if you want to persist the change immediately
+        var result = confirm("Confirm: Mark request as incomplete?\nOther changes made will also take effect");
+        if(result){
+            editedRequest.value.status = 'INCOMPLETE';
+            isApproved.value = false;
+            saveChanges(false); // Optionally, call saveChanges directly if you want to persist the change immediately
+        }
     };
 
 
