@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import AdminHeader from '../components/adminHeader.vue';
 import Sidebar from '../components/Sidebar.vue';
 import { useRouter } from 'vue-router';
@@ -65,12 +64,12 @@ export default {
     },
     methods: {
     getStudents() {
-        axios
-        .get("http://127.0.0.1:8081/students")
-        .then((response) => {
-            this.students = response.data.data;
+        fetch("http://127.0.0.1:8081/students")
+        .then(response => response.json())  // Convert the response to JSON
+        .then(data => {
+            this.students = data.data;
         })
-        .catch((error) => {
+        .catch(error => {
             console.log(error);
         });
     },
@@ -88,13 +87,17 @@ export default {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
         };
-        axios
-        .put(url, { reason }, { headers })
-        .then((response) => {
-            console.log(response.data)
+        fetch(url, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify({ reason })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
             this.getStudents();
         })
-        .catch((error) => {
+        .catch(error => {
             console.log(error);
         });
     },
