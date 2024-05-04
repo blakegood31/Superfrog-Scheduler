@@ -70,11 +70,14 @@
                         <td class="distance">{{ request.milesFromTCU }}</td>
                         <td class="eventType">{{ request.eventType }}</td>
                         <td class="actions">
-                            <span v-if="canEdit && !['CANCELLED'].includes(request.status)">
-                                <button  @click="editRequestDetails(request.id)">Edit / View</button>
+                            <span>
+                                <button v-if="canEdit && request.status !== 'REJECTED' && request.status !== 'CANCELLED' && request.status !== 'COMPLETED'" @click="editRequestDetails(request.id)">Edit</button>
                             </span>
-                            <span v-else>
+                            <span>
                                 <button @click="viewRequest(request.id)">View</button>
+                            </span>
+                            <span>
+                                <button v-if="request.status === 'PENDING'" @click="approveRequest(request.id)">Approve</button>
                             </span>
                         </td>
                     </tr>
@@ -144,7 +147,6 @@
     }).catch(error => {
         console.error('Error: ', error);
     });
-    
     if(JSON.parse(localStorage.getItem('userInfo')).roles.split(' ').includes("superfrog")){
       canEditSuperfrog.value = true;
     }
@@ -160,6 +162,43 @@
     }
     else{
         canEdit.value = false;
+    }
+
+    console.log(allRequests.value);
+    // Method to approve a request
+    const approveRequest = (requestId) => {
+        console.log("Approving request ${requestId}");
+        const jwt = localStorage.getItem('userToken');
+        const url = 'http://localhost:8081/requests/' + requestId + '/status/APPROVED';
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + jwt
+            }
+        }).then(response => {
+            if(response.ok){
+                const updatedArray = allRequests.value;
+                updatedArray.find(req => req.id === requestId).status = 'APPROVED';
+                allRequests.value = updatedArray;
+                updateStatusBadge();
+                return response.json();
+            }
+            else{
+                throw new Error("Token usage failed");
+            }
+        }).then(data => {
+            console.log(data);
+            alert("Request Approved Successfully");
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
+        console.log("Updating");
+    };
+
+    const updateStatusBadge = async () => {
+        showStatus.value = false;
+        await nextTick();
+        showStatus.value = true;
     }
 
     // Method to change visibility of attributes in the table based on user selection
@@ -403,16 +442,5 @@
         font-size: min(2vw, 35px);
         color: #531e7e;
         border-bottom: 1px solid black;
-    }
-
-    .actions > span > button {
-        border-radius: 5px;
-        border: 1px solid gray;
-        cursor: pointer;
-    }
-
-    .actions > span > button:hover {
-        outline: 1px solid #832cc9;
-        border-color: #832cc9;
     }
 </style>

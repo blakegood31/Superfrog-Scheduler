@@ -45,14 +45,14 @@
           <h2 class="statusTitle">Status</h2>
           <!-- <p><span :class="request.status">{{request.status}}</span></p> -->
           <StatusBadge :customClass="request.status">{{ request.status }}</StatusBadge>
-          <button v-if="request.status === 'ASSIGNED'" @click="markAsCompleted(request.id)">Mark Completed</button>
+          <button v-if="(request.status === 'INCOMPLETE' || request.status === 'ASSIGNED')" @click="markAsCompleted(request.id)">Mark as Completed</button>
 
         </div>
         <div class="field">
           <h2>Assigned Student</h2>
           <p>{{ request.superfrog ? request.superfrog.firstName + ' ' + request.superfrog.lastName : 'Unassigned' }}</p>
         </div>
-        <div class="mainButtons">
+        <div>
           <button @click="backToAll">Back to All Requests</button>
         </div>
       </div>
@@ -70,11 +70,10 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const request = ref(JSON.parse(localStorage.getItem('requestToView') || '{}'));
 
-
 const markAsCompleted = async (id) => {
+  request.value.status = 'COMPLETED';
   // Add a confirmation dialog
-  if (confirm("Confirm: Mark this request as completed?")) {
-    request.value.status = 'COMPLETED';
+  if (confirm("Are you sure you want to mark this request as completed?")) {
     await saveChanges(id, request.value.status);
   } else {
     console.log('Update canceled by user');
@@ -90,6 +89,8 @@ const saveChanges = async (id, status) => {
       'Authorization': 'Bearer ' + localStorage.getItem('userToken')
     }
   });
+
+
   if (response.ok) {
     const updatedRequest = await response.json();
     localStorage.setItem('requestToView', JSON.stringify(updatedRequest));
@@ -192,6 +193,82 @@ const backToAll = () => {
         font-size: 20px;
     }
 
+    /* .REJECTED {
+        margin-top: 40px;
+        background-color: rgba(255, 50, 40, 0.1);
+        color: rgba(230, 0, 0, 1);
+        border: 2px solid rgba(230, 0, 0, 1);
+        padding: 4px 8px;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .CANCELLED {
+        margin-top: 40px;
+        background-color: rgba(255, 50, 40, 0.1);
+        color: rgba(230, 0, 0, 1);
+        border: 2px solid rgba(230, 0, 0, 1);
+        padding: 4px 8px;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .APPROVED {
+        margin-top: 40px;
+        background-color: rgba(75, 225, 65, 0.1);
+        color: rgba(65, 215, 55, 1);
+        border: 2px solid rgba(65, 215, 55, 1);
+        padding: 4px 8px;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .COMPLETED {
+        margin-top: 40px;
+        background-color: rgba(75, 225, 65, 0.1);
+        color: rgba(65, 215, 55, 1);
+        border: 2px solid rgba(65, 215, 55, 1);
+        padding: 4px 8px;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .ASSIGNED {
+        background-color: rgba(75, 225, 65, 0.1);
+        color: rgba(65, 215, 55, 1);
+        border: 2px solid rgba(65, 215, 55, 1);
+        padding: 4px 8px;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .PENDING {
+        margin-top: 40px;
+        background-color: rgba(245, 195, 0, 0.15);
+        color: rgba(245, 195, 0, 1);
+        border: 2px solid rgba(245, 195, 0, 1);
+        padding: 4px 8px;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .INCOMPLETE {
+        margin-top: 40px;
+        background-color: rgba(245, 195, 0, 0.15);
+        color: rgba(245, 195, 0, 1);
+        border: 2px solid rgba(245, 195, 0, 1);
+        padding: 4px 8px;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+    } */
+
     .statusTitle{
         margin-bottom: 10px;
     }
@@ -206,20 +283,23 @@ const backToAll = () => {
         margin-left: 5px;
     }
 
-    button {
-        margin-top: 10px;
+    #cancel-reason{
+        display: flex;
+        margin-bottom: 10px;
+        justify-content: center;
+    }
+    #cancel-reason > input{
+        width: 60vw;
+        height: 20px;
+        border: 1px solid red;
         border-radius: 5px;
-        border: 1px solid gray;
-        cursor: pointer;
+        background-color: rgba(255, 235, 235, 1);
     }
 
-    button:hover {
-        outline: 1px solid #832cc9;
-        border-color: #832cc9;
-    }
-
-    .mainButtons {
-      text-align: center;
+    #cancel-reason > input:focus {
+        border: 2px solid red;
+        background-color: white;
+        outline-style: none;
     }
 
 </style>

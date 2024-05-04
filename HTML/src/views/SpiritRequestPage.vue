@@ -12,7 +12,7 @@
         </div>
 
         <!-- Event type dropdown selection -->
-        <div>
+        <div v-if="newRequest.selectedDate" >
             <br><br>
             <label for="eventType">Event Type</label>
             <select name="eventType" id="eventType" v-model="newRequest.eventType">
@@ -25,7 +25,7 @@
 
         <!-- Personal contact info -->
 
-        <div class="field">
+        <div v-if="newRequest.eventType" class="field">
             <h2>Personal Contact Information</h2>
 
             <br>
@@ -52,7 +52,7 @@
         </div>
 
         <!-- Event Information -->
-        <div class="field">
+        <div v-if="newRequest.email" class=field>
             <h2>Event Information</h2>
             <label for="etitle">Event Title</label>
             <input type="text" id="etitle" name="etitle" v-model="newRequest.eventTitle">
@@ -92,7 +92,7 @@
 
         </div>
 
-        <div class="field">
+        <div v-if="newRequest.expenses" class="field">
             <h2>TCU Spirit Team Terms and Conditions</h2><br>
             <ul>
                 <li>Submission of a request does not guarantee the event will be accepted.</li>
@@ -108,63 +108,116 @@
             <input type="checkbox" id="confirmation" name="confirmation" value="terms" v-model="newRequest.termsAgreed">
             <label for="confirmation"> I agree to the terms & conditions of a TCU Spirit Appearance.</label>
         </div><br>
-
-        <div class="options">
+    
+    <div class="options">
     <!-- Go back to landing -->
     <button @click="goToLanding">Back</button>
 
     <!-- Move forward to submission page -->
-    <button @click="goToConfirm">Submit Edits</button>
-
-    <button @click="cancelRequest">Cancel this Request</button>
+    <button @click="goToConfirm" :disabled="!newRequest.termsAgreed">Submit</button>
     
 </div>
 <br><br>
-        </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
-  import { useRouter } from 'vue-router';
-  
-  const router = useRouter();
-  
-  const newRequest = ref({
-      selectedDate: '',
-      // Add other request fields here
-  });
-  
-  // Fetch existing request details
-  const requestId = router.currentRoute.value.params.requestId;
-  fetch(`http://127.0.0.1:8081/requests/${requestId}`, {
-      method: 'GET',
-      headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('userToken')
-      }
-  })
-  .then(response => response.json())
-  .then(data => {
-      newRequest.value = data;
-  });
-  
-  const goToLanding = () => {
-      router.push('/customer');
-  };
-  
-  const goToConfirm = () => {
-      // Send updated data to backend
-      // Then navigate back
-      router.push('/requestconfirmation');
-  };
+    </div>
+</template>
 
-  const cancelRequest = () => {
-      // Send updated data to backend
-      // Then navigate back
-      router.push('/cancelled');
-  };
+<script setup>
+    import { ref } from 'vue';
+    import { useStore } from 'vuex';
+    import { useRouter } from 'vue-router';
 
-  </script>
+    const router = useRouter();
+    const newRequest = ref({
+        selectedDate: '',
+        eventType: '',
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        email: '',
+        eventTitle: '',
+        orgName: '',
+        address: '',
+        description: '',
+        specialInstructions: '',
+        other_orgs: '',
+        expenses: ''
+    });
+
+    const store = useStore();
+    let termsAgreed = ref(false);
+
+    const goToLanding = () => {
+        // go to customer landing page
+        router.push('/admin');
+    };
+
+    const goToConfirm = () => {
+        //perform validation checks
+        /*if (!validateRequest()) {
+            return;
+        }*/
+
+        //set status to PENDING
+        newRequest.value.status = "ASSIGNED";
+
+        const options = {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer' + localStorage.getItem('userToken')
+            },
+            body: JSON.stringify(newRequest.value)
+        };
+
+        console.log(options.body);
+        const url = 'http://127.0.0.1:8081/requests';
+        fetch(url, options)
+            .then(response => {
+                if(response.ok){
+                    console.log(response);
+                    return response.json();
+                } else {
+                    console.log("ERROR!");
+                }
+            }).then(data => {
+                localStorage.setItem('requestToSubmit', JSON.stringify(data.data));
+                //editedRequest.value = JSON.parse(localStorage.getItem('requestToSubmit'));
+                //oldRequest.value = JSON.parse(localStorage.getItem('requestToSubmit'));
+            });
+
+        //send to submit
+        router.push('/admin');
+    };
+
+    //validations
+    const validateRequest = () => {
+        const { firstName, lastName, phoneNumber, email, eventType, eventTitle, orgName, address, specialInstructions, other_orgs, description } = newRequest.value;
+
+        //check if empty
+        if (!newRequest.firstName || !newRequest.lastName || !newRequest.phoneNumber || !newRequest.email || !newRequest.eventType || !newRequest.eventTitle || !newRequest.orgName || !newRequest.address || !newRequest.specialInstructions || !newRequest.other_orgs || !newRequest.description) {
+            console.log("Please fill in all required fields.");
+            return false;
+        }
+
+        // Check phone number format
+        const phoneFormat = /^\(\d{3}\) \d{3}-\d{4}$/;
+        if (!phoneFormat.test(newRequest.phoneNumber)) {
+            console.log("Phone number format is incorrect. Please use (999) 999-9999 format.");
+            return false;
+        }
+
+        // Check email format
+        const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailFormat.test(newRequest.email)) {
+            console.log("Email format is incorrect. Please use a valid email address.");
+            return false;
+        }
+
+        // TO DO: address validation
+
+        return true;
+    }
+</script>
 
 <style scoped>
     .container{
