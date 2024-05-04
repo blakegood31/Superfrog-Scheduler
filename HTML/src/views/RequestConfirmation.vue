@@ -34,7 +34,7 @@ const goToHome = () => {
 };
 
 const fetchRequestId = () => {
-  const url = 'http://localhost:8081/generateRequestId'; // Update with your actual endpoint
+  const url = 'http://localhost:8081/generateRequestId'; 
   fetch(url)
     .then(response => {
       if (response.ok) {
@@ -44,7 +44,8 @@ const fetchRequestId = () => {
       }
     })
     .then(data => {
-      requestId.value = data.requestId; // Assuming the response contains the request ID
+      requestId.value = data.requestId; 
+      console.log('Request ID fetched:', requestId.value);
     })
     .catch(error => {
       console.error('Error fetching request ID:', error);
