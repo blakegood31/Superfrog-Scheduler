@@ -7,7 +7,7 @@
                 <button v-if="canEditSuperfrog" @click="editSuperfrogProfile" class="editsf">Edit Superfrog Profile</button>
                 <h2 class="pageTitle"> All Superfrog Requests</h2>
 
-                <!-- <button id="showFieldsGridButton" @click="showFieldSelections"><img id="filterIcon" src="HTML/src/assets/funnel.png"></button> -->
+                <button id="showFieldsGridButton" @click="showFieldSelections"><img id="filterIcon" src="../assets/funnel.png"></button>
                 <div class="hidden" id="showFieldGrid">
                     <label for="checkbox1">
                         <input type="checkbox" id="checkbox1" v-model="showColumns.eventTitle"> Event Title
@@ -66,7 +66,7 @@
                         <td class="endTime">{{ request.endTime }}</td>
                         <td class="description">{{ request.description }}</td>
                         <td class="superfrog">{{ request.superfrog ? request.superfrog.lastName + ', ' + request.superfrog.firstName : 'Unassigned' }}</td>
-                        <td class="status"><StatusBadge :customClass="request.status">{{request.status}}</StatusBadge></td>
+                        <td class="status"><StatusBadge :customClass="request.status" v-if="showStatus">{{request.status}}</StatusBadge></td>
                         <td class="distance">{{ request.milesFromTCU }}</td>
                         <td class="eventType">{{ request.eventType }}</td>
                         <td class="actions">
@@ -77,7 +77,7 @@
                                 <button @click="viewRequest(request.id)">View</button>
                             </span>
                             <span>
-                                <button v-if="request.status === 'PENDING'">Approve</button>
+                                <button v-if="request.status === 'PENDING'" @click="approveRequest(request.id)">Approve</button>
                             </span>
                         </td>
                     </tr>
@@ -91,19 +91,23 @@
     import { useRouter } from 'vue-router';
     import AdminHeader from '../components/adminHeader.vue';
     import StatusBadge from '../components/statusBadge.vue';
-    import Sidebar from '../components/Sidebar.vue';
+    import Sidebar from '../components/Sidebar.vue'; 
+    import { nextTick } from 'vue';
 
     const router = useRouter();
 
+    // Create variables to be used in html
     const allRequests = defineModel('allRequests');
     const showTable = defineModel('showTable');
     const canEdit = defineModel('canEdit');
     const canView = defineModel('canView');
     const canEditSuperfrog = defineModel('canEditSuperfrog');
     const showColumns = defineModel('showColumns');
+    const showStatus = defineModel('showStatus');
 
+
+    showStatus.value = true;
     showTable.value = false;
-
     showColumns.value = {
         eventTitle: true,
         cname: true,
@@ -118,43 +122,7 @@
         actions: true
     };
 
-    const saveShowSelection = () => {
-        const colDict = showColumns.value;
-        Object.keys(colDict).forEach(key => {
-            console.log(key + " " +colDict[key]);
-            const headerId = key + "-Th";
-            console.log(headerId);
-            const header = document.querySelectorAll('.' + headerId);
-            const data = document.querySelectorAll('.' + key);
-            console.log(header);
-            console.log(data);
-            if(colDict[key] !== true){
-                header.forEach(elt => {
-                    elt.classList.add("hidden");
-                });
-                data.forEach(elt => {
-                    elt.classList.add("hidden");
-                });
-            }
-            else{
-                header.forEach(elt => {
-                    elt.classList.remove("hidden");
-                });
-                data.forEach(elt => {
-                    elt.classList.remove("hidden");
-                });
-            }
-        })
-    };
-
-    const showFieldSelections = () => {
-        const grid = document.getElementById('showFieldGrid');
-        grid.classList.toggle("hidden");
-        grid.classList.toggle("checkbox-grid");
-
-    }
-
-    // Get all requests from backend
+    // Get all requests from backend (initialize table)
     const jwt = localStorage.getItem('userToken');
     fetch('http://localhost:8081/requests', {
         method: 'GET',
@@ -196,37 +164,82 @@
         canEdit.value = false;
     }
 
-
-    const testShow = () => {
-        console.log(showColumns.value);
-    }
-
-    const unauthorizedRequest = () => {
-        // Test method for making a priviledged request with an invalid token
-        // Make the request
-        fetch('http://localhost:8081/users', {
-            method: 'GET',
+    console.log(allRequests.value);
+    // Method to approve a request
+    const approveRequest = (requestId) => {
+        console.log("Approving request ${requestId}");
+        const jwt = localStorage.getItem('userToken');
+        const url = 'http://localhost:8081/requests/' + requestId + '/status/APPROVED';
+        fetch(url, {
+            method: 'PUT',
             headers: {
-                'Authorization': 'Bearer ' + "BaDT0k3nTe5T"
+                'Authorization': 'Bearer ' + jwt
             }
         }).then(response => {
             if(response.ok){
-                console.log("Successful Token Usage");
+                const updatedArray = allRequests.value;
+                updatedArray.find(req => req.id === requestId).status = 'APPROVED';
+                allRequests.value = updatedArray;
+                updateStatusBadge();
                 return response.json();
             }
             else{
-                console.log("Token Usage Unsuccessful");
-                console.log(response);
                 throw new Error("Token usage failed");
             }
         }).then(data => {
             console.log(data);
+            alert("Request Approved Successfully");
         }).catch(error => {
-            // Request should cause an error
             console.error('Error: ', error);
         });
+        console.log("Updating");
     };
 
+    const updateStatusBadge = async () => {
+        showStatus.value = false;
+        await nextTick();
+        showStatus.value = true;
+    }
+
+    // Method to change visibility of attributes in the table based on user selection
+    const saveShowSelection = () => {
+        const colDict = showColumns.value;
+        Object.keys(colDict).forEach(key => {
+            console.log(key + " " +colDict[key]);
+            const headerId = key + "-Th";
+            console.log(headerId);
+            const header = document.querySelectorAll('.' + headerId);
+            const data = document.querySelectorAll('.' + key);
+            console.log(header);
+            console.log(data);
+            if(colDict[key] !== true){
+                header.forEach(elt => {
+                    elt.classList.add("hidden");
+                });
+                data.forEach(elt => {
+                    elt.classList.add("hidden");
+                });
+            }
+            else{
+                header.forEach(elt => {
+                    elt.classList.remove("hidden");
+                });
+                data.forEach(elt => {
+                    elt.classList.remove("hidden");
+                });
+            }
+        })
+    };
+
+    // Button to show/hide filter options
+    const showFieldSelections = () => {
+        const grid = document.getElementById('showFieldGrid');
+        grid.classList.toggle("hidden");
+        grid.classList.toggle("checkbox-grid");
+
+    }
+
+    // Button to take user to "edit request" page
     const editRequestDetails = (requestId) => {
         const userRoles = JSON.parse(localStorage.getItem('userInfo')).roles.split(' ');
         if(!userRoles.includes("customer") && !userRoles.includes("admin")){
@@ -264,7 +277,7 @@
         router.push('/EditSuperfrogProfile')
     }
 
-
+    // Button to take user to "view request" page (no editing)
     const viewRequest = (requestId) => {
         const userRoles = JSON.parse(localStorage.getItem('userInfo')).roles.split(' ');
         const jwt = localStorage.getItem('userToken');
@@ -289,31 +302,6 @@
             console.log(data);
             localStorage.setItem('requestToView', JSON.stringify(data.data));
             router.push('/viewRequest');
-        }).catch(error => {
-            console.error('Error: ', error);
-        });
-    };
-
-    const viewApprovedRequests = () => {
-        const jwt = localStorage.getItem('userToken');
-        fetch('http://localhost:8081/requests/approved', {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + jwt
-            }
-        }).then(response => {
-            if(response.ok){
-                console.log("Successful Token Usage");
-                return response.json();
-            }
-            else{
-                console.log("Token Usage Unsuccessful");
-                console.log(response);
-                throw new Error("Token usage failed");
-            }
-        }).then(data => {
-            console.log(data);
-            localStorage.setItem('requestToEdit', JSON.stringify(data.data));
         }).catch(error => {
             console.error('Error: ', error);
         });
