@@ -21,7 +21,7 @@
               </li>
               <li>
                 <a href="#">
-                  <span class="nav-item">View All Students</span>
+                  <span class="nav-item" @click="viewStudents">View All Students</span>
                 </a>
               </li>
             </ul>
@@ -71,23 +71,27 @@
     </div>
   </template>
   
-  <script>
-  export default {
-    data() {
-      return {
-        showStudents: false,
-        showRequests: false
-      };
-    },
-    methods: {
-      toggleStudents() {
-        this.showStudents = !this.showStudents;
-      },
-      toggleRequests() {
-        this.showRequests = !this.showRequests;
-      }
+  <script setup>
+    import { useRouter } from 'vue-router';
+
+    const router = useRouter();
+    const showStudents = defineModel('showStudents');
+    const showRequests = defineModel('showRequests');
+
+    showStudents.value = false;
+    showRequests.value = false;
+
+    const toggleStudents = () => {
+      showStudents.value = !showStudents.value;
+    };
+
+    const toggleRequests = () => {
+      showRequests.value = !showRequests.value;
+    };
+
+    const viewStudents = () => {
+      router.push('/admin_ViewStudents')
     }
-  };
   </script>
   
   <style scoped>
