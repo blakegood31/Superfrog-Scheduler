@@ -130,8 +130,19 @@
   const router = useRouter();
   
   const newRequest = ref({
-      selectedDate: '',
-      // Add other request fields here
+        selectedDate: '',
+        eventType: '',
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        email: '',
+        eventTitle: '',
+        orgName: '',
+        address: '',
+        description: '',
+        specialInstructions: '',
+        other_orgs: '',
+        expenses: ''
   });
   
   // Fetch existing request details
