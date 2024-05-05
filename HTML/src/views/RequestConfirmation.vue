@@ -31,7 +31,7 @@ const selectedDate = ref('');
 
 const goToHome = () => {
   // go back to request
-  router.push('/custlanding');
+  router.push('/customer');
 };
 
 const fetchRequestId = () => {

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        
+       
         <div class="field">
             <div>
             <h2>Event Information</h2>
