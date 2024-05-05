@@ -12,6 +12,8 @@ import EditSuperfrogProfile from "@/views/EditSuperfrogProfile.vue";
 import RequestConfirmation from '../views/RequestConfirmation.vue';
 import admin_ViewStudents from '../views/admin_ViewStudents.vue';
 import CancelConfirmation from '../views/cancelConfirmation.vue';
+import ViewStudentDetails from '../views/ViewStudentDetails.vue';
+
 
 //create the router instance
 const router = createRouter({
@@ -29,7 +31,10 @@ const router = createRouter({
         { path: '/editcustrequest', component: CustEditRequestDetails },
         { path: '/requestconfirmation', component: RequestConfirmation},
         { path: '/admin_ViewStudents', component: admin_ViewStudents},
-        { path: '/cancelled', component: CancelConfirmation}
+        { path: '/cancelled', component: CancelConfirmation},
+        { path: '/viewStudentDetails', component: ViewStudentDetails},
+
+    
     ]
 });
 
